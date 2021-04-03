@@ -12,7 +12,7 @@ $ sudo apt-get install mkvtoolnix ffmpeg mediainfo
 
 Take a look [here, H.F.M repositories](https://github.com/hfmrow/) for other useful linux softwares.
 
-- If you just want to use it, simply download the '*.deb' compiled version under the "release" tab.
+- If you just want to use it, simply download the '*.deb' compiled version under the [releases](https://github.com/hfmrow/info-media-mkv-ed/releases) tab.
 
 - If you want to play inside code, see below "How to compile" section.
 
@@ -59,15 +59,19 @@ Take a look [here, H.F.M repositories](https://github.com/hfmrow/) for other use
 
 - To Produce a stand-alone executable, you must change inside "main.go" file:
   
-        func main() {
-            devMode = true
-        ...
+  ```go
+    func main() {
+        devMode = true
+    ...
+  ```
   
   into
   
-        func main() {
-            devMode = false
-        ...
+  ```go
+    func main() {
+        devMode = false
+    ...
+  ```
 
 This operation indicates that the external data (image/icons) must be integrated into the executable file and/or that the internal behavior will be modified to adapt to the production environment.
 
