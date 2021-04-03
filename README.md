@@ -31,7 +31,7 @@ Take a look [here, H.F.M repositories](https://github.com/hfmrow/) for other use
 - Head/Tail video trimmer.
 - Aspect/ratio modifier.
 - Batch processing.
-- 
+- Quick view information media (depending on input: 1 file display summary information, more display files list).
 - Drag & Drop functionality.
 - Note: due to windows non decoration, left [alt] key restore decoration functionality until button pressed.
 
