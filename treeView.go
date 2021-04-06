@@ -63,31 +63,23 @@ func changeCheckState(invert bool) {
 
 func treeViewFilesPopulate(files ...[]string) error {
 
-	var (
-	// fi    os.FileInfo
-	// err error
-	// iTrue []interface{}
-	)
-
 	filesToDisplay := filesIn
 	if len(files) > 0 {
 		filesToDisplay = files[0]
 	}
 
+	if !obj.MainWindow.GetVisible() {
+		updWinPos(5)
+		obj.MainWindow.Show()
+	}
+	obj.TreeViewFiles.GrabFocus()
+
 	if !obj.EditCheckCumulativeDnD.GetActive() {
 		tvsFilesIn.Clear()
+		tvsFilesIn.StoreDetach()
+		defer tvsFilesIn.StoreAttach()
 		displayedFiles = displayedFiles[:0]
 	}
-
-	// if obj.EditCheckDispFilesInfo.GetActive() {
-	tvsFilesIn.Columns[colsFilesMap["Type"]].Column.SetVisible(true)
-	tvsFilesIn.Columns[colsFilesMap["WxH"]].Column.SetVisible(true)
-	tvsFilesIn.Columns[colsFilesMap["Duration"]].Column.SetVisible(true)
-	// } else {
-	// 	tvsFilesIn.Columns[colsFilesMap["Type"]].Column.SetVisible(false)
-	// 	tvsFilesIn.Columns[colsFilesMap["WxH"]].Column.SetVisible(false)
-	// 	tvsFilesIn.Columns[colsFilesMap["Duration"]].Column.SetVisible(false)
-	// }
 
 	filesCount = 0
 	for _, file := range filesToDisplay {
@@ -154,7 +146,7 @@ func treeViewFilesPopulate(files ...[]string) error {
 				return false
 			})
 
-		// Remove file that does not match media
+		// Remove file that does not match media type
 		tvsFilesIn.RemoveRows(iterRemove...)
 		sbs.Set(fmt.Sprintf("%d", tvsFilesIn.CountRows()), 0)
 
@@ -168,12 +160,7 @@ func treeViewFilesPopulate(files ...[]string) error {
 
 func fillFile(file string) {
 
-	var (
-		// rows  [][]interface{}
-		// fi    os.FileInfo
-		// err   error
-		iTrue []interface{}
-	)
+	var iTrue []interface{}
 
 	iTrue = append(iTrue, true)
 	displayedFiles = append(displayedFiles, file)
@@ -183,35 +170,6 @@ func fillFile(file string) {
 	wh := unreadable
 	time := unreadable
 	size := unreadable
-
-	// if obj.EditCheckDispFilesInfo.GetActive() {
-	// 	// mediainfo, err := MediaInfoStructNew(file)
-	// 	// if err != nil {
-	// 	// 	// continue
-	// 	// 	return
-	// 	// }
-	// 	// if !obj.EditCheckGeneralRemux.GetActive() {
-	// 	// 	if mediainfo.Media[0].AudioCount == 0 && mediainfo.Media[0].VideoCount == 0 {
-	// 	// 		// continue
-	// 	// 		return
-	// 	// 	}
-	// 	// }
-	// 	// if len(mediainfo.Media[0].Streams) > 1 {
-	// 	// 	stream := mediainfo.Media[0].Streams[1]
-	// 	// 	format = fmt.Sprintf("%s", strings.ToLower(stream.Format))
-	// 	// 	wh = fmt.Sprintf("%sx%s", stream.Width, stream.Height)
-	// 	// 	duration := strings.Split(toTime(stream.Duration), ".")
-	// 	// 	size = toSize(mediainfo.Media[0].Streams[0].FileSize)
-	// 	// 	time = strNA
-	// 	// 	if len(duration) > 1 {
-	// 	// 		time = duration[0]
-	// 	// 	}
-	// 	// }
-	// } else {
-	// fi, err = os.Stat(file)
-	// Logger.Log(err, "treeViewFilesPopulate/Stat")
-	// size := HumanReadableSize(fi.Size(), HR_UNIT_SHORTEN|HR_UNIT_LOWER)
-	// }
 
 	row := tvsFilesIn.ColValuesStringSliceToIfaceSlice(
 		filepath.Base(file),
@@ -226,67 +184,6 @@ func fillFile(file string) {
 	filesCount++
 	sbs.Set(fmt.Sprintf("%d", filesCount), 0)
 }
-
-// func fillFile(file string) {
-
-// 	var (
-// 		// rows  [][]interface{}
-// 		fi    os.FileInfo
-// 		err   error
-// 		iTrue []interface{}
-// 	)
-
-// 	iTrue = append(iTrue, true)
-// 	displayedFiles = append(displayedFiles, file)
-
-// 	unreadable := "Unreadable" // strNA
-// 	format := unreadable
-// 	wh := unreadable
-// 	size := unreadable
-// 	time := unreadable
-
-// 	if obj.EditCheckDispFilesInfo.GetActive() {
-// 		mediainfo, err := MediaInfoStructNew(file)
-// 		if err != nil {
-// 			// continue
-// 			return
-// 		}
-// 		if !obj.EditCheckGeneralRemux.GetActive() {
-// 			if mediainfo.Media[0].AudioCount == 0 && mediainfo.Media[0].VideoCount == 0 {
-// 				// continue
-// 				return
-// 			}
-// 		}
-// 		if len(mediainfo.Media[0].Streams) > 1 {
-// 			stream := mediainfo.Media[0].Streams[1]
-// 			format = fmt.Sprintf("%s", strings.ToLower(stream.Format))
-// 			wh = fmt.Sprintf("%sx%s", stream.Width, stream.Height)
-// 			duration := strings.Split(toTime(stream.Duration), ".")
-// 			size = toSize(mediainfo.Media[0].Streams[0].FileSize)
-// 			time = strNA
-// 			if len(duration) > 1 {
-// 				time = duration[0]
-// 			}
-// 		}
-// 	} else {
-// 		fi, err = os.Stat(file)
-// 		Logger.Log(err, "treeViewFilesPopulate/Stat")
-// 		size = HumanReadableSize(fi.Size(), HR_UNIT_SHORTEN|HR_UNIT_LOWER)
-// 	}
-
-// 	row := tvsFilesIn.ColValuesStringSliceToIfaceSlice(
-// 		filepath.Base(file),
-// 		format,
-// 		wh,
-// 		time,
-// 		size,
-// 		filepath.Dir(file))
-
-// 	row = append(iTrue, row...)
-// 	tvsFilesIn.AddRow(nil, row...)
-// 	filesCount++
-// 	sbs.Set(fmt.Sprintf("%d", filesCount), 0)
-// }
 
 /*
  * Infos media
@@ -368,15 +265,18 @@ func treeViewInfosPopulate(file string) error {
 		Logger.Log(err, "treeViewInfosPopulate/MediaInfoStructNew")
 	}
 	if !obj.WindowInfos.GetVisible() {
+		updWinPos(5)
 		obj.WindowInfos.Show()
-		obj.WindowInfos.Resize(opt.InfosWinWidth, opt.InfosWinHeight)
-		obj.WindowInfos.Move(opt.InfosWinPosX, opt.InfosWinPosY)
 	}
 	obj.TreeViewInfos.GrabFocus()
 
 	// Display all 'streams'
 	tvsInfos.Clear()
-	// go func() {
+	tvsInfos.StoreDetach()
+	defer func() {
+		tvsInfos.StoreAttach()
+		InfosCheckExpandAllToggled(obj.InfosCheckExpandAll)
+	}()
 	for _, media := range mediainfo.Media {
 		for _, stream := range media.Streams {
 
@@ -392,9 +292,5 @@ func treeViewInfosPopulate(file string) error {
 			addToTree([]string{"Chapters", entry.Time, entry.Text})
 		}
 	}
-	// glib.IdleAdd(func() {
-	InfosCheckExpandAllToggled(obj.InfosCheckExpandAll)
-	// })
-	// }()
 	return nil
 }

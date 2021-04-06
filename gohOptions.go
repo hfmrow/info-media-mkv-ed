@@ -189,7 +189,8 @@ type MainOpt struct {
 	SemiDarkMode,
 	EditOverwrite,
 	CumulativeDnD,
-	TitleTextFile bool
+	TitleTextFile,
+	AlreadyStarted bool
 
 	FilesDuration []time.Duration
 
@@ -208,9 +209,11 @@ type MainOpt struct {
 func (opt *MainOpt) Init() {
 
 	opt.MainWinWidth = 800
-	opt.MainWinHeight = 600
-	opt.InfosWinWidth = 520
-	opt.InfosWinHeight = 630
+	opt.MainWinHeight = 400
+	opt.InfosWinWidth = 470
+	opt.InfosWinHeight = 700
+	opt.EditWinWidth = 638
+	opt.EditWinHeight = 537
 
 	opt.OutputSuffix = "_out"
 	opt.SemiDarkMode = true
@@ -258,17 +261,33 @@ func (opt *MainOpt) Init() {
 }
 
 func updWinPos(c int) {
-	var updt = func() {
-		obj.WindowInfos.Resize(opt.InfosWinWidth, opt.InfosWinHeight)
-		obj.WindowInfos.Move(opt.InfosWinPosX, opt.InfosWinPosY)
 
-		obj.EditWindow.Resize(opt.EditWinWidth, opt.EditWinHeight)
-		obj.EditWindow.Move(opt.EditWinPosX, opt.EditWinPosY)
+	var updt = func() {
 
 		obj.MainWindow.Resize(opt.MainWinWidth, opt.MainWinHeight)
-		obj.MainWindow.Move(opt.MainWinPosX, opt.MainWinPosY)
-	}
+		obj.WindowInfos.Resize(opt.InfosWinWidth, opt.InfosWinHeight)
+		obj.EditWindow.Resize(opt.EditWinWidth, opt.EditWinHeight)
 
+		if opt.MainWinPosX+opt.MainWinPosY == 0 {
+			obj.MainWindow.SetDefaultSize(opt.MainWinWidth, opt.MainWinHeight)
+			obj.MainWindow.SetPosition(gtk.WIN_POS_CENTER)
+			// obj.MainWindow.Move(opt.MainWinPosX-(int(float64(opt.MainWinWidth)/2)), opt.MainWinPosY)
+		} else {
+			obj.MainWindow.Move(opt.MainWinPosX, opt.MainWinPosY)
+		}
+		if opt.InfosWinPosX+opt.InfosWinPosY == 0 {
+			obj.WindowInfos.SetDefaultSize(opt.InfosWinWidth, opt.InfosWinHeight)
+			obj.WindowInfos.SetPosition(gtk.WIN_POS_CENTER)
+		} else {
+			obj.WindowInfos.Move(opt.InfosWinPosX, opt.InfosWinPosY)
+		}
+		if opt.EditWinPosX+opt.EditWinPosY == 0 {
+			obj.EditWindow.SetDefaultSize(opt.EditWinWidth, opt.EditWinHeight)
+			obj.EditWindow.SetPosition(gtk.WIN_POS_CENTER)
+		} else {
+			obj.EditWindow.Move(opt.EditWinPosX, opt.EditWinPosY)
+		}
+	}
 	count := c
 	glib.TimeoutAdd(uint(64), func() bool {
 
@@ -281,7 +300,7 @@ func updWinPos(c int) {
 // UpdateObjects: Options -> Objects. Put here options to assign to gtk3 objects at start
 func (opt *MainOpt) UpdateObjects() {
 
-	updWinPos(5)
+	// updWinPos(5)
 
 	/* Your own declarations here */
 	obj.InfosCheckExpandAll.SetActive(opt.InfosExpandAll)

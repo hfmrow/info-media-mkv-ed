@@ -100,6 +100,9 @@ func MainToolButtonClearClicked(tb *gtk.ToolButton) {
 
 func MainToolButtonEditClicked(tb *gtk.ToolButton) {
 
+	opt.MainWinWidth, opt.MainWinHeight = obj.MainWindow.GetSize()
+	opt.MainWinPosX, opt.MainWinPosY = obj.MainWindow.GetPosition()
+
 	obj.EditWindow.SetModal(false)
 	obj.EditWindow.SetKeepAbove(true)
 	obj.EditWindow.SetTitle("")

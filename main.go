@@ -13,13 +13,7 @@
 package main
 
 /*
-	Also used: Goffmpeg -> github.com/xfrr/goffmpeg/ffmpeg
-	Author: Copyright (c) 2018 FlooStack
-	MIT License
-
-	Also used: go-mediainfo -> github.com/zelenin/go-mediainfo
-	Author: Aleksandr Zelenin, e-mail: aleksandr@zelenin.me
-	Unspecified license type.
+	This program requires the installation of the 'mkvtoolnix', 'ffmpeg', 'mediainfo' packages.
 */
 
 import (
@@ -61,15 +55,6 @@ func main() {
 	opt = new(MainOpt) // Assignate options' structure.
 	opt.Read()         // Read values from options' file if exists.
 
-	if devMode {
-		os.Args = append(os.Args, []string{
-			"/media/syndicate/storage/Vidéos-local/vid-cut/naming/tst/Atlantis S01E01 - Le Taureau de Minos (The Earth Bull).mkv",
-			"/media/syndicate/storage/Vidéos-local/vid-cut/naming/tst/Atlantis S01E02 - Une fille peut en cacher une autre (A Girl By Any Other Name).mkv",
-			"/media/syndicate/storage/Vidéos-local/vid-cut/naming/tst/Atlantis S01E03 - Un garçon sans importance (A Boy of No Consequence).mkv",
-			"/media/syndicate/storage/Vidéos-local/vid-cut/naming/tst/Atlantis S01E04 - Ironie du sort (Twist of Fate).mkv",
-		}...)
-	}
-
 	if len(os.Args) > 1 {
 		for _, file := range os.Args[1:] {
 			filesIn = append(filesIn, file)
@@ -105,6 +90,7 @@ func mainApplication() {
 	if !opt.SemiDarkMode {
 		optTransp = 0
 	}
+
 	/* Init windows decoration */
 	if mainWinDeco, err = WinDecorationStructureNew(
 		obj.MainWindow,
@@ -114,9 +100,7 @@ func mainApplication() {
 		DECO_AUTO_SHOW_HIDE|optTransp); err == nil {
 		mainWinDeco.TransparentFG = opt.MainFgCol.ToGdkRGBA()
 		mainWinDeco.TransparentBG = opt.MainBgCol.ToGdkRGBA()
-		// obj.MainWindow.SetOpacity(0)
 		mainWinDeco.Init()
-		// obj.MainWindow.SetOpacity(1)
 		// Deactivate 'Displacement' when hovering 'TreeViewFiles'
 		mainWinDeco.SignalHandleBlockUnblock(obj.TreeViewFiles.ToWidget(), nil, nil)
 	}
@@ -130,9 +114,7 @@ func mainApplication() {
 		DECO_AUTO_SHOW_HIDE|optTransp); err == nil {
 		infosWinDeco.TransparentFG = opt.MainFgCol.ToGdkRGBA()
 		infosWinDeco.TransparentBG = opt.MainBgCol.ToGdkRGBA()
-		// obj.WindowInfos.SetOpacity(0)
 		infosWinDeco.Init()
-		// obj.WindowInfos.SetOpacity(1)
 		// Deactivate 'Displacement' when hovering 'TreeViewInfos'
 		infosWinDeco.SignalHandleBlockUnblock(obj.TreeViewInfos.ToWidget(), nil, nil)
 	}
@@ -146,9 +128,7 @@ func mainApplication() {
 		DECO_AUTO_SHOW_HIDE|optTransp); err == nil {
 		editWinDeco.TransparentFG = opt.MainFgCol.ToGdkRGBA()
 		editWinDeco.TransparentBG = opt.MainBgCol.ToGdkRGBA()
-		// obj.EditWindow.SetOpacity(0)
 		editWinDeco.Init()
-		// obj.EditWindow.SetOpacity(1)
 		// Deactivate 'Displacement' when hovering SpinButtons
 		editWinDeco.SignalHandleBlockUnblock(obj.EditSpinCutSec.ToWidget(), nil, nil)
 		editWinDeco.SignalHandleBlockUnblock(obj.EditSpinCutSecDuration.ToWidget(), nil, nil)
@@ -209,12 +189,11 @@ func mainApplication() {
 
 			/* If there is only one file in the list, only show infos media */
 			if standAloneWindow {
-				obj.WindowInfos.Connect("delete-event", windowDestroy)
 				err = treeViewInfosPopulate(filesIn[0])
 				Logger.Log(err, "mainApplication/treeViewInfosPopulate")
 			} else {
-				obj.MainWindow.Show()
-				updWinPos(5)
+				// obj.MainWindow.Show()
+				// updWinPos(5)
 				err = treeViewFilesPopulate()
 				Logger.Log(err, "mainApplication/treeViewFilesPopulate")
 			}

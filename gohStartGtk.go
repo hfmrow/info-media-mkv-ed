@@ -44,7 +44,7 @@ func mainStartGtk(winTitle string, width, height int, center bool) {
 		// 	obj.MainWindow.SetPosition(gtk.WIN_POS_CENTER)
 		// }
 		obj.MainWindow.Connect("delete-event", func() { ButtonExitClicked(nil) })
-		// obj.MainWindow.SetDefaultSize(width, height)
+
 		obj.MainWindow.SetTitle(winTitle)
 
 		// obj.Progressbar.Hide()
@@ -59,9 +59,6 @@ func mainStartGtk(winTitle string, width, height int, center bool) {
 		afterSignals()
 
 		/* Start Gui loop */
-		if !standAloneWindow {
-
-		}
 		gtk.Main()
 	} else {
 		log.Fatal("Builder initialisation error.", err.Error())
