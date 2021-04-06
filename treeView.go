@@ -258,7 +258,6 @@ func treeViewInfosPopulate(file string) error {
 	)
 
 	obj.InfosHeaderLabel.SetLabel(TruncatePath(file, 2))
-	obj.InfosButtonShowFilesList.SetVisible(!obj.MainWindow.GetVisible())
 
 	mediainfo, err = MediaInfoStructNew(file)
 	if err != nil {
@@ -267,6 +266,9 @@ func treeViewInfosPopulate(file string) error {
 	if !obj.WindowInfos.GetVisible() {
 		updWinPos(5)
 		obj.WindowInfos.Show()
+		obj.WindowInfos.SetModal(false)
+		obj.WindowInfos.SetKeepAbove(true)
+		obj.InfosButtonShowFilesList.SetVisible(!obj.MainWindow.GetVisible())
 	}
 	obj.TreeViewInfos.GrabFocus()
 
