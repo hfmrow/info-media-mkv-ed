@@ -41,7 +41,7 @@ func main() {
 
 	// VSCode use a tmp directory to execute compiled code
 	// so, we have to disable 'absoluteRealPath' at development
-	devMode = false
+	devMode = true
 	VSCode = false
 
 	absoluteRealPath, optFilename = getAbsRealPath()
