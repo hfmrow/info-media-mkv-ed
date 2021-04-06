@@ -5,7 +5,7 @@
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2021 hfmrow - mediainfo wraper library github.com/hfmrow
+	Copyright ©2021 hfmrow - Info Media mkv Ed v1.1 github.com/hfmrow/info-media-mkv-ed
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -13,10 +13,8 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
+	"log"
 	"path/filepath"
-	"strings"
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
@@ -30,7 +28,7 @@ func SpinSecChanged(spin *gtk.SpinButton) {
 }
 
 /*
- * CheckButtons
+ * Check/RadioButtons
  */
 func InfosCheckExpandAllToggled(chk *gtk.CheckButton) {
 	opt.InfosExpandAll = chk.GetActive()
@@ -41,12 +39,11 @@ func InfosCheckExpandAllToggled(chk *gtk.CheckButton) {
 	}
 }
 
-func EditCutCheckShowProgressToggled(chk *gtk.CheckButton) {
-	opt.EditShowProgress = chk.GetActive()
-	obj.GridProgress.SetVisible(opt.EditShowProgress)
+func EditCheckSemiDarkModeToggled(chk *gtk.CheckButton) {
+	opt.SemiDarkMode = chk.GetActive()
 }
 
-func EditCutCheckOverwriteToggled(chk *gtk.CheckButton) {
+func EditCheckOverwriteToggled(chk *gtk.CheckButton) {
 	opt.EditOverwrite = chk.GetActive()
 }
 
@@ -63,6 +60,9 @@ func EditCheckCumulativeDnDToggled(chk *gtk.CheckButton) {
  */
 func ButtonExitClicked(btn *gtk.Button) {
 
+	opt.MainWinWidth, opt.MainWinHeight = obj.MainWindow.GetSize()
+	opt.MainWinPosX, opt.MainWinPosY = obj.MainWindow.GetPosition()
+
 	InfosButtonCloseClicked(nil)
 	EditButtonCloseClicked(nil)
 	windowDestroy(nil)
@@ -75,22 +75,6 @@ func EditButtonCloseClicked(btn *gtk.Button) {
 		opt.EditWinPosX, opt.EditWinPosY = obj.EditWindow.GetPosition()
 	}
 	obj.EditWindow.Hide()
-}
-
-func MainToolButtonClearClicked(tb *gtk.ToolButton) {
-	tvsFilesIn.Clear()
-	displayedFiles = displayedFiles[:0]
-}
-
-func MainToolButtonEditClicked(tb *gtk.ToolButton) {
-
-	obj.EditWindow.SetModal(false)
-	obj.EditWindow.SetKeepAbove(true)
-	obj.EditWindow.SetTitle("")
-	obj.EditWindow.Show()
-
-	obj.EditWindow.Resize(opt.EditWinWidth, opt.EditWinHeight)
-	obj.EditWindow.Move(opt.EditWinPosX, opt.EditWinPosY)
 }
 
 func InfosButtonCloseClicked(btn *gtk.Button) {
@@ -109,154 +93,65 @@ func InfosButtonCloseClicked(btn *gtk.Button) {
 	}
 }
 
-func InfosButtonShowEditClicked(btn *gtk.Button) {
+func MainToolButtonClearClicked(tb *gtk.ToolButton) {
+	tvsFilesIn.Clear()
+	displayedFiles = displayedFiles[:0]
+}
 
-	obj.MainWindow.ShowAll()
-	obj.MainWindow.Resize(opt.MainWinWidth, opt.MainWinHeight)
-	obj.MainWindow.Move(opt.MainWinPosX, opt.MainWinPosY)
+func MainToolButtonEditClicked(tb *gtk.ToolButton) {
 
+	obj.EditWindow.SetModal(false)
+	obj.EditWindow.SetKeepAbove(true)
+	obj.EditWindow.SetTitle("")
+	obj.EditWindow.Show()
+
+	updWinPos(5)
+}
+
+func InfosButtonShowFilesListClicked(btn *gtk.Button) {
+
+	var err error
+	if standAloneWindow {
+		err = treeViewFilesPopulate()
+		Logger.Log(err, "mainApplication/treeViewFilesPopulate")
+
+		obj.MainWindow.Show()
+		updWinPos(5)
+	}
 	standAloneWindow = false
 	InfosButtonCloseClicked(nil)
 }
 
 func ButtonProceedClicked(btn *gtk.Button) {
 
-	var formatErrorList string
+	getFileTitle()
 
-	// Retrieve selected filenames in treeview
-	filesIn = filesIn[:0]
-	list, err := tvsFilesIn.StoreToIfaceSlice()
+	anim, err := GetPixBufAnimation(linearProgressHorzBlue)
 	if err != nil {
-		Logger.Log(err, "ButtonProceedClicked/StoreToIfaceSlice")
-		DialogMessage(obj.MainWindow, "warning", "Warning", "\n"+err.Error(), nil, "Continue")
-		return
+		log.Fatalf("GetPixBufAnimation: %s\n", err.Error())
 	}
-	for _, row := range list {
-		if row[colsFilesMap["Toggle"]].(bool) {
-			fileIn := filepath.Join(
-				row[colsFilesMap["Path"]].(string),
-				row[colsFilesMap["Name"]].(string))
-			filesIn = append(filesIn, fileIn)
-		}
+	gifImage, err := gtk.ImageNewFromAnimation(anim)
+	if err != nil {
+		log.Fatalf("ImageNewFromAnimation: %s\n", err.Error())
 	}
+	pbs = ProgressGifNew(gifImage, obj.BoxMain, 1,
+		func() error {
+			glib.IdleAdd(func() {
+				obj.ButtonProceed.SetSensitive(false)
+				obj.BoxEdit.SetSensitive(false)
+			})
+			goEdit()
+			return nil
+		},
+		func() error {
+			obj.ButtonProceed.SetSensitive(true)
+			obj.BoxEdit.SetSensitive(true)
+			return nil
+		})
 
-	// Titles generator
-	if obj.EditRadioGeneralTitleChange.GetActive() {
-		// Generate from filename
-		if obj.EditRadioGeneralTitleUseFilename.GetActive() {
-			for _, title := range filesIn {
-				if len(title) > 0 {
-					filesOut = append(filesOut, strings.TrimSpace(BaseNoExt(title)))
-				}
-			}
-		} else {
-			// Generate from text file
-			filename, ok, err := FileChooser(obj.MainWindow, "open-entry", "Choose titles text file", filepath.Dir(filesIn[0]))
-			if err != nil {
-				Logger.Log(err, "ButtonProceedClicked/FileChooser")
-				DialogMessage(obj.MainWindow, "warning", "Warning", "\n"+err.Error(), nil, "Continue")
-				return
-			}
-			if ok {
-				textFileBytes, err := ioutil.ReadFile(filename)
-				if err != nil {
-					Logger.Log(err, "ButtonProceedClicked/ReadFile")
-					DialogMessage(obj.MainWindow, "warning", "Warning", "\n"+err.Error(), nil, "Continue")
-					return
-				}
-				tmpStrSl := strings.Split(string(textFileBytes), "\n")
-				filesOut = filesOut[:0]
-				for _, title := range tmpStrSl {
-					if len(title) > 0 {
-						filesOut = append(filesOut, strings.TrimSpace(title))
-					}
-				}
-			}
-		}
-		if len(filesIn) != len(filesOut) {
-			Logger.Log(err, "ButtonProceedClicked/Titles generator")
-			DialogMessage(obj.MainWindow, "warning", "Warning",
-				"\n"+`Title(s) error, please make sure you have the same number of title(s) as the file(s) and try again.`,
-				nil, "Continue")
-			return
-		}
-	}
-	var title string
-	for idx, file := range filesIn {
-		/**********************
-		 * Tags modifications
-		 **********************/
-		mediainfo, err = MediaInfoStructNew(file)
-		if obj.EditRadioGeneralTitleChange.GetActive() {
-			title = filesOut[idx]
-		}
-
-		if err != nil {
-			Logger.Log(err, "ButtonProceedClicked/MediaInfoStructNew")
-			DialogMessage(obj.MainWindow, "warning", "Warning", "\n"+err.Error(), nil, "Continue")
-			return
-		}
-
-		stream := mediainfo.Media[0].Streams[0]
-		if !strings.Contains(stream.Format, "Matroska") {
-			formatErrorList += fmt.Sprintf("%s: %s\n", stream.Format, TruncatePath(file, 2))
-			continue
-		}
-
-		cmd, err := buildCmdFromCtrl(file, title, mediainfo)
-		if err != nil {
-			Logger.Log(err, "ButtonProceedClicked/buildCmdFromCtrl")
-			DialogMessage(obj.MainWindow, "warning", "Warning", "\n"+err.Error(), nil, "Continue")
-			return
-		}
-		// Execute command
-		if len(cmd) > 2 {
-			out, err := ExecCommand(cmd)
-			if err != nil {
-				fmt.Println(out)
-				Logger.Log(err, "ButtonProceedClicked/ExecCommand")
-				DialogMessage(obj.MainWindow, "warning", "Warning", "\n"+err.Error(), nil, "Continue")
-				return
-			}
-		}
-
-		/*************
-		 * Video Cut
-		 *************/
-		if obj.EditCheckCut.GetActive() ||
-			obj.EditCheckAspectRatio.GetActive() {
-			// go func() {
-			obj.GridProgress.SetVisible(obj.EditCutCheckShowProgress.GetActive())
-			err = FFmpegCmdMaker(
-				file,
-				buildFileOut(file),
-				mediainfo,
-				obj.EditCutCheckOverwrite.GetActive(),
-				func(items map[string]string) {
-					if obj.EditCutCheckShowProgress.GetActive() {
-						glib.TimeoutAdd(10, func() bool {
-							obj.LabelCurrentFilenameDisp.SetLabel(TruncatePath(buildFileOut(file), 2))
-							obj.LabelFpsDisp.SetLabel(items["fps"])
-							obj.LabelBitrateDisp.SetLabel(items["bitrate"])
-							obj.LabelFrameDisp.SetLabel(items["frame"])
-							obj.LabelSpeedDisp.SetLabel(items["speed"])
-							return false
-						})
-					}
-				})
-			if err != nil {
-				Logger.Log(err, "ButtonProceedClicked/FFmpegCmdMaker")
-				DialogMessage(obj.MainWindow, "warning", "Warning", "\n"+err.Error(), nil, "Continue")
-				return
-			}
-			// }()
-		}
-	}
-	if len(formatErrorList) > 0 {
-		DialogMessage(obj.MainWindow, "warning", "Warning",
-			"\nEditing capability is only for Matroska files, some are not.\n\n"+formatErrorList,
-			nil, "Continue")
-	}
+	go func() {
+		pbs.StartGif()
+	}()
 }
 
 /*
@@ -279,4 +174,87 @@ func TreeViewFilesActivated(tv *gtk.TreeView, path *gtk.TreePath, col *gtk.TreeV
 		Logger.Log(err, "TreeViewFilesActivated/treeViewInfosPopulate")
 		DialogMessage(obj.MainWindow, "warning", "Warning", "\n"+err.Error(), nil, "Continue")
 	}
+}
+
+func switchRemux(x interface{}) {
+	if obj.EditCheckAspectRatio.GetActive() ||
+		obj.EditCheckCut.GetActive() ||
+		obj.EditCheckSplit.GetActive() ||
+		obj.EditCheckGeneralRemux.GetActive() ||
+		obj.EditCheckAudioDelay.GetActive() {
+
+		obj.EditFrameTitle.SetSensitive(false)
+		obj.EditGridTag.SetSensitive(false)
+		obj.EditFrameText.SetSensitive(false)
+		obj.EditFrameAudioTrack.SetSensitive(false)
+		obj.EditCheckAudioDelName.SetSensitive(false)
+		obj.EditFrameARType.SetSensitive(false)
+		obj.EditCheckVideoDelName.SetSensitive(false)
+
+	} else {
+		obj.EditFrameTitle.SetSensitive(true)
+		obj.EditGridTag.SetSensitive(true)
+		obj.EditFrameText.SetSensitive(true)
+		obj.EditFrameAudioTrack.SetSensitive(true)
+		obj.EditCheckAudioDelName.SetSensitive(true)
+		obj.EditFrameARType.SetSensitive(true)
+		obj.EditCheckVideoDelName.SetSensitive(true)
+
+	}
+	var setSensitive = func(cut, remux, ar, delay, split bool) {
+		obj.EditFrameCut.SetSensitive(cut)
+		obj.EditCheckGeneralRemux.SetSensitive(remux)
+		obj.EditFrameAspectRatio.SetSensitive(ar)
+		obj.EditFrameDelay.SetSensitive(delay)
+		obj.EditFrameSplit.SetSensitive(split)
+	}
+	setSensitive(true, true, true, true, true)
+	if obj.EditCheckAudioDelay.GetActive() {
+		setSensitive(false, false, false, true, false)
+	}
+	if obj.EditCheckCut.GetActive() ||
+		obj.EditCheckAspectRatio.GetActive() {
+		setSensitive(true, false, true, false, false)
+	}
+	if obj.EditCheckGeneralRemux.GetActive() {
+		setSensitive(false, true, false, false, false)
+	}
+	if obj.EditCheckSplit.GetActive() {
+		setSensitive(false, false, false, false, true)
+	}
+}
+
+func switchProp(x interface{}) {
+
+	if obj.EditCheckVideoDelLibrary.GetActive() ||
+		obj.EditCheckVideoDelApp.GetActive() ||
+		obj.EditCheckVideoDelDate.GetActive() ||
+		obj.EditCheckVideoDelName.GetActive() ||
+		obj.EditCheckVideoARType.GetActive() ||
+		obj.EditCheckTextDelName.GetActive() ||
+		obj.EditCheckAudioDelName.GetActive() ||
+		obj.EditCheckAudioTrack.GetActive() ||
+		obj.EditCheckTextTrack.GetActive() ||
+		obj.EditRadioGeneralTitleRemove.GetActive() ||
+		obj.EditRadioGeneralTitleChange.GetActive() ||
+		obj.EditCheckGeneralCleanTags.GetActive() {
+
+		obj.EditFrameCut.SetSensitive(false)
+		obj.EditCheckGeneralRemux.SetSensitive(false)
+		obj.EditFrameAspectRatio.SetSensitive(false)
+		obj.EditFrameDelay.SetSensitive(false)
+		obj.EditFrameSplit.SetSensitive(false)
+	} else {
+		obj.EditFrameCut.SetSensitive(true)
+		obj.EditCheckGeneralRemux.SetSensitive(true)
+		obj.EditFrameAspectRatio.SetSensitive(true)
+		obj.EditFrameDelay.SetSensitive(true)
+		obj.EditFrameSplit.SetSensitive(true)
+	}
+	obj.EditFrameTitle.SetSensitive(true)
+	obj.EditGridTag.SetSensitive(true)
+	obj.EditFrameText.SetSensitive(true)
+	obj.EditFrameAudioTrack.SetSensitive(true)
+	obj.EditCheckAudioDelName.SetSensitive(true)
+	obj.EditFrameARType.SetSensitive(true)
 }

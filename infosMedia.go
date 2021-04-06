@@ -5,7 +5,7 @@
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2021 hfmrow - mkv-edit-gui v1.0 github.com/hfmrow/mkv-edit-gui
+	Copyright ©2021 hfmrow - Info Media mkv Ed v1.1 github.com/hfmrow/info-media-mkv-ed
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -13,6 +13,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -36,7 +37,7 @@ func muColor(color string, n int, in []string) []string {
 func buildInfoRows(stream gltsmo.Track, filename string) (rows [][]string) {
 	var (
 		getTypeWthID = func() string {
-			return stream.Type + "(" + stream.InStreamID + ")"
+			return fmt.Sprintf("%s (%d)", stream.Type, stream.InStreamID)
 		}
 	)
 
@@ -156,9 +157,9 @@ func toSize(in string, suffix ...string) string {
 	if len(in) > 0 {
 		val, _ := strconv.ParseFloat(in, 64)
 		if len(suffix) > 0 {
-			return HumanReadableSize(val) + suffix[0]
+			return HumanReadableSize(val, HR_UNIT_SHORTEN|HR_UNIT_LOWER) + suffix[0]
 		}
-		return HumanReadableSize(val)
+		return HumanReadableSize(val, HR_UNIT_SHORTEN|HR_UNIT_LOWER)
 	}
 	return strNA
 }

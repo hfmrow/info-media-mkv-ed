@@ -1,1 +1,0 @@
-mkvpropedit [$IN$] --tags all:"" --set title=[$TITLE$] --edit track:v1 --set language=fre --set flag-forced=0 --delete name --edit track:a1 --set language=fre --set flag-forced=0 --delete name

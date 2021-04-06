@@ -43,7 +43,7 @@ func ExecCommandProgress(cmd []string, lineCount int, progress func(lines []stri
 	execCmd.Stderr = &stderr
 	// stdout redirection
 	if stdout, err = execCmd.StdoutPipe(); err == nil {
-		// Assignate to a reader
+		// Assignate output to a reader
 		buf := bufio.NewReader(stdout)
 		if err = execCmd.Start(); err != nil {
 			return err
@@ -62,6 +62,7 @@ func ExecCommandProgress(cmd []string, lineCount int, progress func(lines []stri
 				break
 			}
 			progress(lines)
+			// time.Sleep(time.Duration(float64(time.Millisecond) * 0.5))
 		}
 	}
 	err = execCmd.Wait()

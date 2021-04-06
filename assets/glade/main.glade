@@ -13,7 +13,7 @@
       <placeholder/>
     </child>
     <child>
-      <object class="GtkBox" id="box4">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="margin_left">2</property>
@@ -22,28 +22,1008 @@
         <property name="margin_bottom">2</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkBox" id="BoxEdit">
+            <property name="name">boxedit</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="vexpand">True</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkFrame">
+              <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="vexpand">True</property>
-                <property name="label_xalign">0.5</property>
                 <child>
-                  <object class="GtkGrid">
+                  <object class="GtkFrame">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_right">1</property>
+                    <property name="vexpand">True</property>
+                    <property name="label_xalign">0.5</property>
                     <child>
                       <object class="GtkGrid">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkCheckButton" id="EditCheckGeneralTitleCleanTags">
-                            <property name="name">editcheckgeneraltitlecleantags</property>
-                            <property name="label" translatable="yes">Clean tags</property>
+                          <object class="GtkGrid" id="EditGridTag">
+                            <property name="name">editgridtag</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkCheckButton" id="EditCheckGeneralCleanTags">
+                                <property name="name">editcheckgeneralcleantags</property>
+                                <property name="label" translatable="yes">Clean tags</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="EditCheckVideoDelLibrary">
+                                <property name="name">editcheckvideodellibrary</property>
+                                <property name="label" translatable="yes">Remove lib information</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="EditCheckVideoDelApp">
+                                <property name="name">editcheckvideodelapp</property>
+                                <property name="label" translatable="yes">Delete app information</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="EditCheckVideoDelDate">
+                                <property name="name">editcheckvideodeldate</property>
+                                <property name="label" translatable="yes">Remove date</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkFrame">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="margin_left">1</property>
+                                <property name="margin_right">1</property>
+                                <property name="margin_bottom">2</property>
+                                <property name="label_xalign">0.5</property>
+                                <child>
+                                  <object class="GtkEntry" id="EditEntryGeneralPreserveTracks">
+                                    <property name="name">editentrygeneralpreservetracks</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="margin_left">1</property>
+                                    <property name="margin_right">1</property>
+                                    <property name="margin_bottom">1</property>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkCheckButton" id="EditCheckGeneralPreserveTracks">
+                                    <property name="name">editcheckgeneralpreservetracks</property>
+                                    <property name="label" translatable="yes">Preserve tracks</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">4</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFrame" id="EditFrameTitle">
+                            <property name="name">editframetitle</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_right">1</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="label_xalign">0.5</property>
+                            <child>
+                              <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="hexpand">True</property>
+                                <child>
+                                  <object class="GtkRadioButton" id="EditRadioGeneralTitleKeep">
+                                    <property name="name">editradiogeneraltitlekeep</property>
+                                    <property name="label" translatable="yes">Keep</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">EditRadioGeneralTitleRemove</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="EditRadioGeneralTitleRemove">
+                                    <property name="name">editradiogeneraltitleremove</property>
+                                    <property name="label" translatable="yes">Remove</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">EditRadioGeneralTitleKeep</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="EditRadioGeneralTitleChange">
+                                    <property name="name">editradiogeneraltitlechange</property>
+                                    <property name="label" translatable="yes">Change</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">EditRadioGeneralTitleKeep</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSeparator">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="hexpand">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="EditRadioGeneralTitleUseFilename">
+                                    <property name="name">editradiogeneraltitleusefilename</property>
+                                    <property name="label" translatable="yes">Use filename</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">EditRadioGeneralTitleUseTxtFile</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">4</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="EditRadioGeneralTitleUseTxtFile">
+                                    <property name="name">editradiogeneraltitleusetxtfile</property>
+                                    <property name="label" translatable="yes">Use textfile</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">5</property>
+                                  </packing>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkLabel" id="EditLabelGeneralTitle">
+                                <property name="name">editlabelgeneraltitle</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Title</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="EditCheckGeneralRemux">
+                            <property name="name">editcheckgeneralremux</property>
+                            <property name="label" translatable="yes">Remux only</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="EditLabelGeneral">
+                        <property name="name">editlabelgeneral</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">General</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">1</property>
+                    <property name="margin_right">1</property>
+                    <property name="label_xalign">0.5</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkGrid" id="EditGridVideo">
+                            <property name="name">editgridvideo</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkFrame" id="EditFrameAspectRatio">
+                                <property name="name">editframeaspectratio</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="valign">end</property>
+                                <property name="margin_left">1</property>
+                                <property name="margin_right">1</property>
+                                <property name="margin_bottom">2</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">False</property>
+                                <property name="label_xalign">0.5</property>
+                                <child>
+                                  <object class="GtkGrid">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="valign">start</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="vexpand">False</property>
+                                    <child>
+                                      <object class="GtkEntry" id="EditEntryAspectRatio">
+                                        <property name="name">editentryaspectratio</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="halign">center</property>
+                                        <property name="margin_left">1</property>
+                                        <property name="margin_right">1</property>
+                                        <property name="margin_bottom">1</property>
+                                        <property name="hexpand">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">0</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkCheckButton" id="EditCheckAspectRatio">
+                                    <property name="name">editcheckaspectratio</property>
+                                    <property name="label" translatable="yes">Aspect ratio</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="margin_bottom">2</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkFrame" id="EditFrameARType">
+                                <property name="name">editframeartype</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="valign">end</property>
+                                <property name="margin_left">1</property>
+                                <property name="margin_right">1</property>
+                                <property name="margin_bottom">2</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">False</property>
+                                <property name="label_xalign">0.5</property>
+                                <child>
+                                  <object class="GtkGrid">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="valign">start</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="vexpand">False</property>
+                                    <child>
+                                      <object class="GtkRadioButton" id="EditRadioVideoARFreeResize">
+                                        <property name="name">editradiovideoarfreeresize</property>
+                                        <property name="label" translatable="yes">Free resize</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="draw_indicator">True</property>
+                                        <property name="group">EditRadioVideoARKeep</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkRadioButton" id="EditRadioVideoARKeep">
+                                        <property name="name">editradiovideoarkeep</property>
+                                        <property name="label" translatable="yes">Keep</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="active">True</property>
+                                        <property name="draw_indicator">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkRadioButton" id="EditRadioVideoARFixed">
+                                        <property name="name">editradiovideoarfixed</property>
+                                        <property name="label" translatable="yes">Fixed</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="draw_indicator">True</property>
+                                        <property name="group">EditRadioVideoARKeep</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkRadioButton" id="EditRadioVideoARRemove">
+                                        <property name="name">editradiovideoarremove</property>
+                                        <property name="label" translatable="yes">Remove entry</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="draw_indicator">True</property>
+                                        <property name="group">EditRadioVideoARKeep</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">3</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkCheckButton" id="EditCheckVideoARType">
+                                    <property name="name">editcheckvideoartype</property>
+                                    <property name="label" translatable="yes">Aspect ratio type</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="margin_left">1</property>
+                                    <property name="margin_right">1</property>
+                                    <property name="margin_bottom">2</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="EditCheckVideoDelName">
+                            <property name="name">editcheckvideodelname</property>
+                            <property name="label" translatable="yes">Clear name</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="valign">end</property>
+                            <property name="vexpand">True</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="EditLabelVideo">
+                        <property name="name">editlabelvideo</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Video</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">1</property>
+                    <property name="margin_right">1</property>
+                    <property name="label_xalign">0.5</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkFrame" id="EditFrameAudioTrack">
+                            <property name="name">editframeaudiotrack</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_right">1</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="label_xalign">0.5</property>
+                            <child>
+                              <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="hexpand">True</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="EditCheckAudioTrackDefault">
+                                    <property name="name">editcheckaudiotrackdefault</property>
+                                    <property name="label" translatable="yes">Set default</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="EditCheckAudioTrackForced">
+                                    <property name="name">editcheckaudiotrackforced</property>
+                                    <property name="label" translatable="yes">Set forced</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkCheckButton" id="EditCheckAudioTrack">
+                                <property name="name">editcheckaudiotrack</property>
+                                <property name="label" translatable="yes">Track</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="EditCheckAudioDelName">
+                            <property name="name">editcheckaudiodelname</property>
+                            <property name="label" translatable="yes">Clear name</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="valign">end</property>
+                            <property name="vexpand">True</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton" id="EditSpinAudioTrack">
+                            <property name="name">editspinaudiotrack</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_right">1</property>
+                            <property name="margin_bottom">1</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFrame" id="EditFrameDelay">
+                            <property name="name">editframedelay</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_right">1</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="label_xalign">0.5</property>
+                            <child>
+                              <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="hexpand">True</property>
+                                <child>
+                                  <object class="GtkSpinButton" id="EditSpinAudioDelay">
+                                    <property name="name">editspinaudiodelay</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="margin_left">1</property>
+                                    <property name="margin_right">1</property>
+                                    <property name="margin_bottom">1</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkCheckButton" id="EditCheckAudioDelay">
+                                <property name="name">editcheckaudiodelay</property>
+                                <property name="label" translatable="yes">Set delay</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="EditLabelAudio">
+                        <property name="name">editlabelaudio</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Audio</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame" id="EditFrameText">
+                    <property name="name">editframetext</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">1</property>
+                    <property name="label_xalign">0.5</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkFrame" id="EditFrameTextTrack">
+                            <property name="name">editframetexttrack</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_right">1</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="label_xalign">0.5</property>
+                            <child>
+                              <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="hexpand">True</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="EditCheckTextTrackDefault">
+                                    <property name="name">editchecktexttrackdefault</property>
+                                    <property name="label" translatable="yes">Set default</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="EditCheckTextTrackForced">
+                                    <property name="name">editchecktexttrackforced</property>
+                                    <property name="label" translatable="yes">Set forced</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkCheckButton" id="EditCheckTextTrack">
+                                <property name="name">editchecktexttrack</property>
+                                <property name="label" translatable="yes">Track</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="EditCheckTextDelName">
+                            <property name="name">editchecktextdelname</property>
+                            <property name="label" translatable="yes">Clear name</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="valign">end</property>
+                            <property name="vexpand">True</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton" id="EditSpinTextTrack">
+                            <property name="name">editspintexttrack</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_right">1</property>
+                            <property name="margin_bottom">1</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="EditLabelText">
+                        <property name="name">editlabeltext</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Text</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkFrame" id="EditFrameCut">
+                <property name="name">editframecut</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="valign">end</property>
+                <property name="margin_bottom">2</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">False</property>
+                <property name="label_xalign">0.5</property>
+                <child>
+                  <object class="GtkGrid">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">start</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">False</property>
+                    <child>
+                      <object class="GtkRadioButton" id="EditCutRadioFromStart">
+                        <property name="name">editcutradiofromstart</property>
+                        <property name="label" translatable="yes">Cut at start</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">EditCutRadioFromEnd</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkRadioButton" id="EditCutRadioFromEnd">
+                        <property name="name">editcutradiofromend</property>
+                        <property name="label" translatable="yes">Cut at end</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="EditSpinCutSec">
+                        <property name="name">editspincutsec</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="margin_bottom">1</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkRadioButton" id="EditCutRadioExtract">
+                        <property name="name">editcutradioextract</property>
+                        <property name="label" translatable="yes">Extract Duration</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">EditCutRadioFromEnd</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">3</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="EditSpinCutSecDuration">
+                        <property name="name">editspincutsecduration</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="margin_bottom">1</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">4</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+                <child type="label">
+                  <object class="GtkCheckButton" id="EditCheckCut">
+                    <property name="name">editcheckcut</property>
+                    <property name="label" translatable="yes">Video cut / extract</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkFrame" id="EditFrameSplit">
+                <property name="name">editframesplit</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="valign">end</property>
+                <property name="margin_bottom">2</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">False</property>
+                <property name="label_xalign">0.5</property>
+                <child>
+                  <object class="GtkGrid">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">start</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">False</property>
+                    <child>
+                      <object class="GtkSpinButton" id="EditSpinSplit">
+                        <property name="name">editspinsplit</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="margin_bottom">1</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                </child>
+                <child type="label">
+                  <object class="GtkCheckButton" id="EditCheckSplit">
+                    <property name="name">editchecksplit</property>
+                    <property name="label" translatable="yes">Video split</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkFrame" id="OptionsFrameGlobal">
+                <property name="name">optionsframeglobal</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label_xalign">0.5</property>
+                <child>
+                  <object class="GtkGrid">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkLabel" id="EditLabelOutputSuffix">
+                            <property name="name">editlabeloutputsuffix</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">Output suffix</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="EditEntryOutputSuffix">
+                            <property name="name">editentryoutputsuffix</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="margin_left">1</property>
+                            <property name="margin_bottom">1</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkCheckButton" id="EditCheckSemiDarkMode">
+                            <property name="name">editchecksemidarkmode</property>
+                            <property name="label" translatable="yes">Semi dark mode</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="EditCheckCumulativeDnD">
+                            <property name="name">editcheckcumulativednd</property>
+                            <property name="label" translatable="yes">Cumulative D&amp;D</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -55,317 +1035,27 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EditEntryGeneralPreserveTracks">
-                            <property name="name">editentrygeneralpreservetracks</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">3</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkCheckButton" id="EditCheckGeneralPreserveTracks">
-                            <property name="name">editcheckgeneralpreservetracks</property>
-                            <property name="label" translatable="yes">Preserve tracks</property>
+                          <object class="GtkCheckButton" id="EditCheckOverwrite">
+                            <property name="name">editcheckoverwrite</property>
+                            <property name="label" translatable="yes">Overwrite</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
                             <property name="draw_indicator">True</property>
                           </object>
                           <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">2</property>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="margin_top">6</property>
-                            <property name="margin_bottom">6</property>
-                            <property name="hexpand">True</property>
-                            <property name="vexpand">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">1</property>
-                          </packing>
+                          <placeholder/>
                         </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkFrame">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label_xalign">0.5</property>
                         <child>
-                          <object class="GtkGrid">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="hexpand">True</property>
-                            <child>
-                              <object class="GtkRadioButton" id="EditRadioGeneralTitleKeep">
-                                <property name="name">editradiogeneraltitlekeep</property>
-                                <property name="label" translatable="yes">Keep</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                                <property name="group">EditRadioGeneralTitleRemove</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkRadioButton" id="EditRadioGeneralTitleRemove">
-                                <property name="name">editradiogeneraltitleremove</property>
-                                <property name="label" translatable="yes">Remove</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                                <property name="group">EditRadioGeneralTitleKeep</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkRadioButton" id="EditRadioGeneralTitleChange">
-                                <property name="name">editradiogeneraltitlechange</property>
-                                <property name="label" translatable="yes">Change</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                                <property name="group">EditRadioGeneralTitleKeep</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkSeparator">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="hexpand">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkRadioButton" id="EditRadioGeneralTitleUseFilename">
-                                <property name="name">editradiogeneraltitleusefilename</property>
-                                <property name="label" translatable="yes">Use filename</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                                <property name="group">EditRadioGeneralTitleUseTxtFile</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkRadioButton" id="EditRadioGeneralTitleUseTxtFile">
-                                <property name="name">editradiogeneraltitleusetxtfile</property>
-                                <property name="label" translatable="yes">Use textfile</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">5</property>
-                              </packing>
-                            </child>
-                          </object>
+                          <placeholder/>
                         </child>
-                        <child type="label">
-                          <object class="GtkLabel" id="EditLabelGeneralTitle">
-                            <property name="name">editlabelgeneraltitle</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Title</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkSeparator">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_top">1</property>
-                        <property name="margin_bottom">1</property>
-                        <property name="hexpand">True</property>
-                        <property name="vexpand">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-                <child type="label">
-                  <object class="GtkLabel" id="EditLabelGeneral">
-                    <property name="name">editlabelgeneral</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">General</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkFrame">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">1</property>
-                <property name="label_xalign">0.5</property>
-                <child>
-                  <object class="GtkGrid">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkCheckButton" id="EditCheckVideoDelName">
-                        <property name="name">editcheckvideodelname</property>
-                        <property name="label" translatable="yes">Clear name</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-                <child type="label">
-                  <object class="GtkLabel" id="EditLabelVideo">
-                    <property name="name">editlabelvideo</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Video</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkFrame">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">1</property>
-                <property name="label_xalign">0.5</property>
-                <child>
-                  <object class="GtkGrid">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkFrame">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label_xalign">0.5</property>
                         <child>
-                          <object class="GtkGrid">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="hexpand">True</property>
-                            <child>
-                              <object class="GtkSpinButton" id="EditSpinAudioTrack">
-                                <property name="name">editspinaudiotrack</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="EditCheckAudioTrackDefault">
-                                <property name="name">editcheckaudiotrackdefault</property>
-                                <property name="label" translatable="yes">Set default</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="EditCheckAudioTrackForced">
-                                <property name="name">editcheckaudiotrackforced</property>
-                                <property name="label" translatable="yes">Set forced</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkSeparator">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="margin_top">2</property>
-                                <property name="margin_bottom">2</property>
-                                <property name="hexpand">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </object>
-                        </child>
-                        <child type="label">
-                          <object class="GtkCheckButton" id="EditCheckAudioTrack">
-                            <property name="name">editcheckaudiotrack</property>
-                            <property name="label" translatable="yes">Track</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="draw_indicator">True</property>
-                          </object>
+                          <placeholder/>
                         </child>
                       </object>
                       <packing>
@@ -373,157 +1063,21 @@
                         <property name="top_attach">0</property>
                       </packing>
                     </child>
-                    <child>
-                      <object class="GtkCheckButton" id="EditCheckAudioDelName">
-                        <property name="name">editcheckaudiodelname</property>
-                        <property name="label" translatable="yes">Clear name</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
                   </object>
                 </child>
                 <child type="label">
-                  <object class="GtkLabel" id="EditLabelAudio">
-                    <property name="name">editlabelaudio</property>
+                  <object class="GtkLabel" id="OptionsLabelGlobal">
+                    <property name="name">optionslabelglobal</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Audio</property>
+                    <property name="label" translatable="yes">Global options</property>
                   </object>
                 </child>
               </object>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkFrame">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">1</property>
-                <property name="label_xalign">0.5</property>
-                <child>
-                  <object class="GtkGrid">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkFrame">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label_xalign">0.5</property>
-                        <child>
-                          <object class="GtkGrid">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="hexpand">True</property>
-                            <child>
-                              <object class="GtkSpinButton" id="EditSpinTextTrack">
-                                <property name="name">editspintexttrack</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="EditCheckTextTrackDefault">
-                                <property name="name">editchecktexttrackdefault</property>
-                                <property name="label" translatable="yes">Set default</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="EditCheckTextTrackForced">
-                                <property name="name">editchecktexttrackforced</property>
-                                <property name="label" translatable="yes">Set forced</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkSeparator">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="margin_top">2</property>
-                                <property name="margin_bottom">2</property>
-                                <property name="hexpand">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </object>
-                        </child>
-                        <child type="label">
-                          <object class="GtkCheckButton" id="EditCheckTextTrack">
-                            <property name="name">editchecktexttrack</property>
-                            <property name="label" translatable="yes">Track</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="draw_indicator">True</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="EditCheckTextDelName">
-                        <property name="name">editchecktextdelname</property>
-                        <property name="label" translatable="yes">Clear name</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-                <child type="label">
-                  <object class="GtkLabel" id="EditLabelText">
-                    <property name="name">editlabeltext</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Text</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">0</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>
@@ -531,221 +1085,6 @@
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkFrame" id="frameCut">
-            <property name="name">framecut</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="valign">end</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">False</property>
-            <property name="label_xalign">0.5</property>
-            <child>
-              <object class="GtkGrid">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="valign">start</property>
-                <property name="hexpand">True</property>
-                <property name="vexpand">False</property>
-                <child>
-                  <object class="GtkRadioButton" id="EditCutRadioFromStart">
-                    <property name="name">editcutradiofromstart</property>
-                    <property name="label" translatable="yes">Cut at start</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="draw_indicator">True</property>
-                    <property name="group">EditCutRadioFromEnd</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkRadioButton" id="EditCutRadioFromEnd">
-                    <property name="name">editcutradiofromend</property>
-                    <property name="label" translatable="yes">Cut at end</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="active">True</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkSpinButton" id="EditCutSpinSec">
-                    <property name="name">editcutspinsec</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="margin_bottom">2</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-            <child type="label">
-              <object class="GtkCheckButton" id="EditCheckCut">
-                <property name="name">editcheckcut</property>
-                <property name="label" translatable="yes">Video cut</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="draw_indicator">True</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkFrame" id="frameAspectRatio">
-            <property name="name">framecut</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="valign">end</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">False</property>
-            <property name="label_xalign">0.5</property>
-            <child>
-              <object class="GtkGrid">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="valign">start</property>
-                <property name="hexpand">True</property>
-                <property name="vexpand">False</property>
-                <child>
-                  <object class="GtkEntry" id="EditEntryAspectRatio">
-                    <property name="name">editentryaspectratio</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="halign">center</property>
-                    <property name="margin_bottom">2</property>
-                    <property name="hexpand">True</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-            <child type="label">
-              <object class="GtkCheckButton" id="EditCheckAspectRatio">
-                <property name="name">editcheckaspectratio</property>
-                <property name="label" translatable="yes">Aspect ratio</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="draw_indicator">True</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkGrid">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="halign">center</property>
-            <child>
-              <object class="GtkCheckButton" id="EditCutCheckOverwrite">
-                <property name="name">editcutcheckoverwrite</property>
-                <property name="label" translatable="yes">Overwrite</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="draw_indicator">True</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="EditCutCheckShowProgress">
-                <property name="name">editcutcheckshowprogress</property>
-                <property name="label" translatable="yes">Show progress</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="margin_right">4</property>
-                <property name="draw_indicator">True</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkGrid">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkLabel" id="EditLabelOutputSuffix">
-                    <property name="name">editlabeloutputsuffix</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Output suffix</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="EditEntryOutputSuffix">
-                    <property name="name">editentryoutputsuffix</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="EditCheckCumulativeDnD">
-                <property name="name">editcheckcumulativednd</property>
-                <property name="label" translatable="yes">Cumulative D&amp;D</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="draw_indicator">True</property>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -776,8 +1115,8 @@
                 <property name="name">editstatusbar</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
                 <property name="margin_start">10</property>
                 <property name="margin_end">10</property>
                 <property name="margin_top">2</property>
@@ -831,7 +1170,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
@@ -844,7 +1183,8 @@
       <placeholder/>
     </child>
     <child>
-      <object class="GtkBox" id="box1">
+      <object class="GtkBox" id="BoxMain">
+        <property name="name">boxmain</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="margin_left">2</property>
@@ -889,11 +1229,24 @@
                 <property name="margin_right">1</property>
                 <property name="hexpand">True</property>
                 <child>
-                  <object class="GtkToolButton" id="MainToolButtonEdit">
-                    <property name="name">maintoolbuttonedit</property>
+                  <object class="GtkToolButton" id="MainToolButtonUnckeckAll">
+                    <property name="name">maintoolbuttonunckeckall</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Show edit</property>
+                    <property name="label" translatable="yes">Unckeck all</property>
+                    <property name="use_underline">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="MainToolButtonInvertChecked">
+                    <property name="name">maintoolbuttoninvertchecked</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Invert</property>
                     <property name="use_underline">True</property>
                   </object>
                   <packing>
@@ -907,6 +1260,19 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Clear</property>
+                    <property name="use_underline">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="MainToolButtonEdit">
+                    <property name="name">maintoolbuttonedit</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Editor</property>
                     <property name="use_underline">True</property>
                   </object>
                   <packing>
@@ -940,7 +1306,6 @@
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkTreeView" id="TreeViewFiles">
                     <property name="name">treeviewfiles</property>
@@ -960,165 +1325,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkGrid" id="GridProgress">
-                <property name="name">gridprogress</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <child>
-                  <object class="GtkGrid">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkLabel" id="LabelCurrentFilenameDisp">
-                        <property name="name">labelcurrentfilenamedisp</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">name</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkGrid">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">center</property>
-                        <property name="hexpand">True</property>
-                        <property name="column_homogeneous">True</property>
-                        <child>
-                          <object class="GtkLabel" id="LabelFrame">
-                            <property name="name">labelframe</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="label" translatable="yes">Frame : </property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="LabelFps">
-                            <property name="name">labelfps</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="label" translatable="yes">Fps : </property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="LabelBitrate">
-                            <property name="name">labelbitrate</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="label" translatable="yes">Bitrate : </property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">2</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="LabelSpeed">
-                            <property name="name">labelspeed</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="label" translatable="yes">Speed : </property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">2</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="LabelFrameDisp">
-                            <property name="name">labelframedisp</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="margin_right">4</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="LabelFpsDisp">
-                            <property name="name">labelfpsdisp</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="margin_right">4</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="LabelBitrateDisp">
-                            <property name="name">labelbitratedisp</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="margin_right">4</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">3</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="LabelSpeedDisp">
-                            <property name="name">labelspeeddisp</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="margin_right">4</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">3</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="valign">end</property>
-                <property name="margin_left">1</property>
-                <property name="margin_right">1</property>
-                <property name="margin_bottom">1</property>
                 <property name="vexpand">False</property>
                 <child>
                   <object class="GtkEventBox" id="MainWindowEventboxResize">
@@ -1244,6 +1454,8 @@
           <object class="GtkGrid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_left">2</property>
+            <property name="margin_right">2</property>
             <child>
               <object class="GtkLabel" id="InfosHeaderLabel">
                 <property name="name">infosheaderlabel</property>
@@ -1272,7 +1484,6 @@
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="shadow_type">in</property>
             <child>
               <object class="GtkTreeView" id="TreeViewInfos">
                 <property name="name">treeviewinfos</property>
@@ -1295,10 +1506,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="valign">end</property>
-            <property name="margin_left">1</property>
-            <property name="margin_right">1</property>
             <property name="margin_top">1</property>
-            <property name="margin_bottom">1</property>
             <property name="vexpand">False</property>
             <child>
               <object class="GtkEventBox" id="InfosWindowEventboxResize">
@@ -1325,7 +1533,6 @@
                 <property name="margin_right">2</property>
                 <property name="margin_start">10</property>
                 <property name="margin_end">10</property>
-                <property name="margin_top">2</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <property name="orientation">vertical</property>
@@ -1361,9 +1568,9 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="InfosButtonShowEdit">
-                    <property name="name">infosbuttonshowedit</property>
-                    <property name="label" translatable="yes">Editor</property>
+                  <object class="GtkButton" id="InfosButtonShowFilesList">
+                    <property name="name">infosbuttonshowfileslist</property>
+                    <property name="label" translatable="yes">Files list</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>

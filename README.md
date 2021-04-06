@@ -1,8 +1,8 @@
 # Info Media mkv Ed
 
-*Simple mkv info viewer with some limited editing features, titling, tag cleaner, default/forced track, head/tail video trimmer, aspect/ratio changer.*
+*Simple mkv info viewer with some limited editing features, titling, tag cleaner, default/forced track, head/tail video trimmer, aspect/ratio changer...*
 
-#### Last update 2021-04-03
+#### Last update 2021-04-06
 
 ###### Requirement: *mkvtoolnix, ffmpeg, mediainfo*
 
@@ -24,20 +24,25 @@ Take a look [here, H.F.M repositories](https://github.com/hfmrow/) for other use
 
 ## Functionalities
 
+**Note**: Edition capabilities are only usable with ***Matroska*** format.
+
 - Display information on media (mediainfo like).
 - Allow titling from filename or text file.
-- Useless Tag cleaner capability.
+- Useless Tag cleaner.
 - Set/Change default/forced track.
-- Head/Tail video trimmer.
+- Audio delay manipulation.
 - Aspect/ratio modifier.
+- Head/Tail video trimmer (without re-encoding).
+- And more...
 - Batch processing.
-- Quick view information media (depending on input: 1 file show summary information, more show files list).
+- Quick view information media (depending on input: 1 file show summary information, more, show file list).
 - Drag & Drop functionality.
+- Remux function only. Use case, sometimes when the '.mkv' file is not properly multiplexed and cannot be properly inspected to retrieve media information, the file is not accepted (no display in the file list) . Usually when you inspect the media infos , there is no video / audio track available, that's why it is rejected. With '**Remux only**' function *actived*, you can force accepting file, just drop the file(s) in the file list window and press '**Proceed**' to remux. After that you get a new file with the corrected Matroska container.
 - Note: due to windows non decoration, left [alt] key restore decoration functionality until button pressed.
 
 ## Some pictures
 
-###### Files selection
+###### File selection window
 
 ![Main window](assets/readme/main.jpg)
 
@@ -48,6 +53,10 @@ Take a look [here, H.F.M repositories](https://github.com/hfmrow/) for other use
 ###### Info media
 
 ![Info media](assets/readme/infomedia.jpg)
+
+###### Overview
+
+![](assets/readme/overview.jpg)
 
 ## How to compile
 

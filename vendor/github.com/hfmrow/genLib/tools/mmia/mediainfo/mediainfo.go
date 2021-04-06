@@ -15,7 +15,6 @@ package mediainfo
 
 import (
 	"encoding/json"
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -110,9 +109,9 @@ func wrapMenu(lines []string) menu {
 	return m
 }
 
-// /*
-//  * Helper functions
-//  */
+/*
+ * Helper functions
+ */
 func countTypeStream(m *mediaInfoStruct, typeStream string, removeStream ...bool) int {
 	count := 0
 	rs := false
@@ -123,10 +122,10 @@ func countTypeStream(m *mediaInfoStruct, typeStream string, removeStream ...bool
 		if stream.Type == typeStream {
 			count++
 			if rs {
-				// Remove menu stream
+				// Remove stream
 				m.Media.Streams = append(m.Media.Streams[:idx], m.Media.Streams[idx+1:]...)
 			} else {
-				m.Media.Streams[idx].InStreamID = fmt.Sprintf("%d", count)
+				m.Media.Streams[idx].InStreamID = count
 			}
 		}
 	}
@@ -183,7 +182,7 @@ type Track struct {
 	EncodedLibrary                 string `json:"Encoded_Library,omitempty"`
 	StreamOrder                    string `json:"StreamOrder,omitempty"`
 	ID                             string `json:"ID,omitempty"`
-	InStreamID                     string
+	InStreamID                     int
 	FormatProfile                  string `json:"Format_Profile,omitempty"`
 	FormatLevel                    string `json:"Format_Level,omitempty"`
 	FormatSettingsCABAC            string `json:"Format_Settings_CABAC,omitempty"`

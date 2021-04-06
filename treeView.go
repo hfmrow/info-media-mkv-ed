@@ -5,7 +5,7 @@
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2021 hfmrow - mkv-edit-gui v1.0 github.com/hfmrow/mkv-edit-gui
+	Copyright ©2021 hfmrow - mkv-edit-gui v1.1 github.com/hfmrow/mkv-edit-gui
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -42,9 +42,32 @@ func treeViewFilesSetup() error {
 	return tvsFilesIn.StoreSetup(new(gtk.ListStore))
 }
 
+// changeCheckState: invert or unselect listview rows
+func changeCheckState(invert bool) {
+
+	var (
+		value interface{}
+		err   error
+	)
+	tvsFilesIn.ListStore.ForEach(func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter) bool {
+		if invert {
+			value = tvsFilesIn.GetColValue(iter, colsFilesMap["Toggle"])
+			err = tvsFilesIn.SetColValue(iter, colsFilesMap["Toggle"], !value.(bool))
+		} else {
+			err = tvsFilesIn.SetColValue(iter, colsFilesMap["Toggle"], false)
+		}
+		Logger.Log(err, "changeCheckState/SetColValue")
+		return false
+	})
+}
+
 func treeViewFilesPopulate(files ...[]string) error {
 
-	var rows [][]interface{}
+	var (
+	// fi    os.FileInfo
+	// err error
+	// iTrue []interface{}
+	)
 
 	filesToDisplay := filesIn
 	if len(files) > 0 {
@@ -56,54 +79,214 @@ func treeViewFilesPopulate(files ...[]string) error {
 		displayedFiles = displayedFiles[:0]
 	}
 
-	// b := gltsbh.BenchNew(true)
-	// b.Start("start")
+	// if obj.EditCheckDispFilesInfo.GetActive() {
+	tvsFilesIn.Columns[colsFilesMap["Type"]].Column.SetVisible(true)
+	tvsFilesIn.Columns[colsFilesMap["WxH"]].Column.SetVisible(true)
+	tvsFilesIn.Columns[colsFilesMap["Duration"]].Column.SetVisible(true)
+	// } else {
+	// 	tvsFilesIn.Columns[colsFilesMap["Type"]].Column.SetVisible(false)
+	// 	tvsFilesIn.Columns[colsFilesMap["WxH"]].Column.SetVisible(false)
+	// 	tvsFilesIn.Columns[colsFilesMap["Duration"]].Column.SetVisible(false)
+	// }
+
+	filesCount = 0
 	for _, file := range filesToDisplay {
 
 		if IsExistSlStr(displayedFiles, file) {
 			continue
 		}
-
-		mediainfo, err := MediaInfoStructNew(file)
-		if err != nil ||
-			mediainfo.Media[0].AudioCount == 0 &&
-				mediainfo.Media[0].VideoCount == 0 {
-			continue
-		}
-
-		displayedFiles = append(displayedFiles, file)
-
-		stream := mediainfo.Media[0].Streams[1]
-		format := fmt.Sprintf("%s", strings.ToLower(stream.Format))
-		wh := fmt.Sprintf("%sx%s", stream.Width, stream.Height)
-		duration := strings.Split(toTime(stream.Duration), ".")
-		size := toSize(mediainfo.Media[0].Streams[0].FileSize)
-		time := "n/a"
-		if len(duration) > 1 {
-			time = duration[0]
-		}
-
-		rows = append(rows, tvsFilesIn.ColValuesStringSliceToIfaceSlice(
-			filepath.Base(file),
-			format,
-			wh,
-			time,
-			size,
-			filepath.Dir(file)))
+		fillFile(file)
 	}
 
-	if len(rows) > 0 {
-		var iTrue []interface{}
-
-		iTrue = append(iTrue, true)
-		for _, row := range rows {
-			row = append(iTrue, row...)
-			tvsFilesIn.AddRow(nil, row...)
-		}
+	var iterRemove []*gtk.TreeIter
+	// disabling column sortable
+	for idx, _ := range tvsFilesIn.Columns {
+		tvsFilesIn.Columns[idx].Column.SetSortColumnID(-1)
 	}
-	// b.Stop()
+	go func() {
+		var filename string
+		tvsFilesIn.Model.ForEach(
+			func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter) bool {
+				if row, err := tvsFilesIn.GetRow(iter); err == nil {
+					filename = filepath.Join(row[colsFilesMap["Path"]], row[colsFilesMap["Name"]])
+					mediainfo, err := MediaInfoStructNew(filename)
+					if err != nil {
+						iterRemove = append(iterRemove, iter)
+						Logger.Log(err, "treeViewFilesPopulate/ForEach/MediaInfoStructNew")
+						return false
+					}
+					if !obj.EditCheckGeneralRemux.GetActive() {
+						if mediainfo.Media[0].AudioCount == 0 && mediainfo.Media[0].VideoCount == 0 {
+							Logger.Log(err, fmt.Sprintf(
+								"treeViewFilesPopulate/ForEach/AudioCount %d, VideoCount %d",
+								mediainfo.Media[0].AudioCount, mediainfo.Media[0].VideoCount))
+
+							iterRemove = append(iterRemove, iter)
+							return false
+						}
+					}
+					if len(mediainfo.Media[0].Streams) <= 1 {
+						Logger.Log(err, fmt.Sprintf(
+							"treeViewFilesPopulate/ForEach/Stream(s) count %d",
+							len(mediainfo.Media[0].Streams)))
+
+						iterRemove = append(iterRemove, iter)
+						return false
+					}
+					stream := mediainfo.Media[0].Streams[1]
+					format := fmt.Sprintf("%s", strings.ToLower(stream.Format))
+					wh := fmt.Sprintf("%sx%s", stream.Width, stream.Height)
+					duration := strings.Split(toTime(stream.Duration), ".")
+					size := toSize(mediainfo.Media[0].Streams[0].FileSize)
+					time := strNA
+					if len(duration) > 1 {
+						time = duration[0]
+					}
+
+					tvsFilesIn.SetColValue(iter, colsFilesMap["Type"], format)
+					tvsFilesIn.SetColValue(iter, colsFilesMap["WxH"], wh)
+					tvsFilesIn.SetColValue(iter, colsFilesMap["Duration"], time)
+					tvsFilesIn.SetColValue(iter, colsFilesMap["Size"], size)
+				} else {
+					Logger.Log(err, "treeViewFilesPopulate/ForEach/GetRow")
+					return true
+				}
+				return false
+			})
+
+		// Remove file that does not match media
+		tvsFilesIn.RemoveRows(iterRemove...)
+		sbs.Set(fmt.Sprintf("%d", tvsFilesIn.CountRows()), 0)
+
+		// re-enable column sortable
+		for idx, _ := range tvsFilesIn.Columns {
+			tvsFilesIn.Columns[idx].Column.SetSortColumnID(idx)
+		}
+	}()
 	return nil
 }
+
+func fillFile(file string) {
+
+	var (
+		// rows  [][]interface{}
+		// fi    os.FileInfo
+		// err   error
+		iTrue []interface{}
+	)
+
+	iTrue = append(iTrue, true)
+	displayedFiles = append(displayedFiles, file)
+
+	unreadable := "???" // strNA
+	format := unreadable
+	wh := unreadable
+	time := unreadable
+	size := unreadable
+
+	// if obj.EditCheckDispFilesInfo.GetActive() {
+	// 	// mediainfo, err := MediaInfoStructNew(file)
+	// 	// if err != nil {
+	// 	// 	// continue
+	// 	// 	return
+	// 	// }
+	// 	// if !obj.EditCheckGeneralRemux.GetActive() {
+	// 	// 	if mediainfo.Media[0].AudioCount == 0 && mediainfo.Media[0].VideoCount == 0 {
+	// 	// 		// continue
+	// 	// 		return
+	// 	// 	}
+	// 	// }
+	// 	// if len(mediainfo.Media[0].Streams) > 1 {
+	// 	// 	stream := mediainfo.Media[0].Streams[1]
+	// 	// 	format = fmt.Sprintf("%s", strings.ToLower(stream.Format))
+	// 	// 	wh = fmt.Sprintf("%sx%s", stream.Width, stream.Height)
+	// 	// 	duration := strings.Split(toTime(stream.Duration), ".")
+	// 	// 	size = toSize(mediainfo.Media[0].Streams[0].FileSize)
+	// 	// 	time = strNA
+	// 	// 	if len(duration) > 1 {
+	// 	// 		time = duration[0]
+	// 	// 	}
+	// 	// }
+	// } else {
+	// fi, err = os.Stat(file)
+	// Logger.Log(err, "treeViewFilesPopulate/Stat")
+	// size := HumanReadableSize(fi.Size(), HR_UNIT_SHORTEN|HR_UNIT_LOWER)
+	// }
+
+	row := tvsFilesIn.ColValuesStringSliceToIfaceSlice(
+		filepath.Base(file),
+		format,
+		wh,
+		time,
+		size,
+		filepath.Dir(file))
+
+	row = append(iTrue, row...)
+	tvsFilesIn.AddRow(nil, row...)
+	filesCount++
+	sbs.Set(fmt.Sprintf("%d", filesCount), 0)
+}
+
+// func fillFile(file string) {
+
+// 	var (
+// 		// rows  [][]interface{}
+// 		fi    os.FileInfo
+// 		err   error
+// 		iTrue []interface{}
+// 	)
+
+// 	iTrue = append(iTrue, true)
+// 	displayedFiles = append(displayedFiles, file)
+
+// 	unreadable := "Unreadable" // strNA
+// 	format := unreadable
+// 	wh := unreadable
+// 	size := unreadable
+// 	time := unreadable
+
+// 	if obj.EditCheckDispFilesInfo.GetActive() {
+// 		mediainfo, err := MediaInfoStructNew(file)
+// 		if err != nil {
+// 			// continue
+// 			return
+// 		}
+// 		if !obj.EditCheckGeneralRemux.GetActive() {
+// 			if mediainfo.Media[0].AudioCount == 0 && mediainfo.Media[0].VideoCount == 0 {
+// 				// continue
+// 				return
+// 			}
+// 		}
+// 		if len(mediainfo.Media[0].Streams) > 1 {
+// 			stream := mediainfo.Media[0].Streams[1]
+// 			format = fmt.Sprintf("%s", strings.ToLower(stream.Format))
+// 			wh = fmt.Sprintf("%sx%s", stream.Width, stream.Height)
+// 			duration := strings.Split(toTime(stream.Duration), ".")
+// 			size = toSize(mediainfo.Media[0].Streams[0].FileSize)
+// 			time = strNA
+// 			if len(duration) > 1 {
+// 				time = duration[0]
+// 			}
+// 		}
+// 	} else {
+// 		fi, err = os.Stat(file)
+// 		Logger.Log(err, "treeViewFilesPopulate/Stat")
+// 		size = HumanReadableSize(fi.Size(), HR_UNIT_SHORTEN|HR_UNIT_LOWER)
+// 	}
+
+// 	row := tvsFilesIn.ColValuesStringSliceToIfaceSlice(
+// 		filepath.Base(file),
+// 		format,
+// 		wh,
+// 		time,
+// 		size,
+// 		filepath.Dir(file))
+
+// 	row = append(iTrue, row...)
+// 	tvsFilesIn.AddRow(nil, row...)
+// 	filesCount++
+// 	sbs.Set(fmt.Sprintf("%d", filesCount), 0)
+// }
 
 /*
  * Infos media
@@ -129,13 +312,18 @@ func treeViewInfosSetup() error {
 // Used to keep 1st 'details' in callback function
 var tmpValue string
 
-const strNA = "n/a"
+const strNA = "[n/a]"
 
 func treeViewInfosPopulate(file string) error {
 	var (
 		err error
 
 		addToTree = func(row []string) {
+
+			row = muStyle("b", 0, muColor("#330000", 0, row))
+			row = muStyle("i", 1, muColor("#110000", 1, row))
+			row = muColor("#332244", 2, row)
+
 			iface := tvsInfos.ColValuesStringSliceToIfaceSlice(row...)
 
 			tvsInfos.AddTree(colsInfosMap["Toggle"],
@@ -172,23 +360,30 @@ func treeViewInfosPopulate(file string) error {
 		}
 	)
 
-	tvsInfos.Clear()
+	obj.InfosHeaderLabel.SetLabel(TruncatePath(file, 2))
+	obj.InfosButtonShowFilesList.SetVisible(!obj.MainWindow.GetVisible())
 
 	mediainfo, err = MediaInfoStructNew(file)
 	if err != nil {
 		Logger.Log(err, "treeViewInfosPopulate/MediaInfoStructNew")
 	}
+	if !obj.WindowInfos.GetVisible() {
+		obj.WindowInfos.Show()
+		obj.WindowInfos.Resize(opt.InfosWinWidth, opt.InfosWinHeight)
+		obj.WindowInfos.Move(opt.InfosWinPosX, opt.InfosWinPosY)
+	}
+	obj.TreeViewInfos.GrabFocus()
+
 	// Display all 'streams'
+	tvsInfos.Clear()
+	// go func() {
 	for _, media := range mediainfo.Media {
 		for _, stream := range media.Streams {
 
 			for _, row := range buildInfoRows(stream, file) {
-				if row[2] == strNA {
+				if strings.Contains(row[2], strNA) {
 					continue
 				}
-				row = muStyle("b", 0, muColor("#330000", 0, row))
-				row = muStyle("i", 1, muColor("#110000", 1, row))
-				row = muColor("#332244", 2, row)
 				addToTree(row)
 			}
 		}
@@ -197,21 +392,9 @@ func treeViewInfosPopulate(file string) error {
 			addToTree([]string{"Chapters", entry.Time, entry.Text})
 		}
 	}
-
+	// glib.IdleAdd(func() {
 	InfosCheckExpandAllToggled(obj.InfosCheckExpandAll)
-	tvsInfos.TreeView.SetHeadersVisible(false)
-	obj.WindowInfos.SetModal(false)
-	obj.WindowInfos.SetKeepAbove(true)
-
-	obj.WindowInfos.SetTitle("")
-	obj.InfosHeaderLabel.SetLabel(TruncatePath(file, 2))
-	obj.InfosButtonShowEdit.SetVisible(!obj.MainWindow.GetVisible())
-	obj.WindowInfos.Show()
-
-	obj.WindowInfos.Resize(opt.InfosWinWidth, opt.InfosWinHeight)
-	obj.WindowInfos.Move(opt.InfosWinPosX, opt.InfosWinPosY)
-
-	obj.TreeViewInfos.GrabFocus()
-
+	// })
+	// }()
 	return nil
 }

@@ -1,11 +1,11 @@
 // gohOptions.go
 
 /*
-	Source file auto-generated on Sat, 03 Apr 2021 05:54:34 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
+	Source file auto-generated on Sat, 03 Apr 2021 23:17:38 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2021 hfmrow - Info Media mkv Ed v1.0.5 github.com/hfmrow/info-media-mkv-ed
+	Copyright ©2021 hfmrow - Info Media mkv Ed v1.1 github.com/hfmrow/info-media-mkv-ed
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -30,11 +30,13 @@ import (
 	gidg "github.com/hfmrow/gtk3Import/dialog"
 	gidgcr "github.com/hfmrow/gtk3Import/dialog/chooser"
 	gimc "github.com/hfmrow/gtk3Import/misc"
+	gipfmcrr "github.com/hfmrow/gtk3Import/pixbuff/misc/RGBA"
 	gits "github.com/hfmrow/gtk3Import/tools"
 	gitsww "github.com/hfmrow/gtk3Import/tools/window"
 	gitw "github.com/hfmrow/gtk3Import/treeview"
 
 	"github.com/gotk3/gotk3/glib"
+	"github.com/gotk3/gotk3/gtk"
 )
 
 // Application infos. Only this section could be [modified during an update].
@@ -43,7 +45,7 @@ import (
 // or respect strictly the original applied format.
 var (
 	Name         = "Info Media mkv Ed"
-	Vers         = "v1.0.5"
+	Vers         = "v1.1"
 	Descr        = "Simple mkv info viewer with some limited editing features, titling, tag cleaner, default/forced track, head/tail video trimmer, aspect/ratio changer."
 	Creat        = "hfmrow"
 	YearCreat    = "2021"
@@ -67,11 +69,22 @@ var (
 	 */
 	// Decoration
 	WinDecorationStructureNew = gitsww.WinDecorationStructureNew
+	DECO_AUTO_SHOW_HIDE       = gitsww.DECO_AUTO_SHOW_HIDE
+	DECO_INIT_TRANSPARENT     = gitsww.DECO_INIT_TRANSPARENT
 	mainWinDeco,
 	infosWinDeco,
 	editWinDeco *gitsww.WinDecorationStructure
 
-	/* Lib mapping */
+	// Progressbar
+	ProgressGifNew = gimc.ProgressGifNew
+	pbs            *gimc.ProgressBarStruct
+	// Statusbar
+	StatusBarStructureNew = gimc.StatusBarStructureNew
+	sbs                   *gimc.StatusBar
+
+	// RGBA
+	RgbaNew = gipfmcrr.RgbaNew
+
 	// Command line
 	ExecCommand         = glts.ExecCommand
 	ExecCommandProgress = glts.ExecCommandProgress
@@ -98,16 +111,31 @@ var (
 	tvsInfos             *gitw.TreeViewStructure
 
 	// Dialog
-	DialogMessage = gidg.DialogMessage
-	FileChooser   = gidgcr.FileChooser
+	DialogMessage = func(window *gtk.Window, dlgType, title, text string, iconFileName interface{}, buttons ...string) (value int) {
+		glib.IdleAdd(func() {
+			value = gidg.DialogMessage(window, dlgType, title, text, iconFileName, buttons...)
+		})
+		return
+	}
+	FileChooser = gidgcr.FileChooser /*func(window *gtk.Window, dlgType, title, filename string, options ...bool) (outFilename string, result bool, err error) {
+		glib.IdleAdd(func() {
+			outFilename, result, err = gidgcr.FileChooser(window, dlgType, title, filename, options...)
+		})
+		return
+	}*/
 
 	// D&D
-	DragNDropNew    = gimc.DragNDropNew
-	DragNDropStruct *gimc.DragNDropStruct
+	DragNDropNew = gimc.DragNDropNew
+	DragNDropStruct,
+	DragNDropInfoMedia *gimc.DragNDropStruct
 
 	// Files
 	TruncatePath      = glsg.TruncatePath
+	GetTextEOL        = glsg.GetTextEOL
 	HumanReadableSize = gltsushe.HumanReadableSize
+	HR_UNIT_SHORTEN   = gltsushe.UNIT_SHORTEN
+	HR_UNIT_DECIMAL   = gltsushe.UNIT_DECIMAL
+	HR_UNIT_LOWER     = gltsushe.UNIT_LOWER
 	HumanReadableTime = gltsushe.HumanReadableTime
 	BaseNoExt         = glfs.BaseNoExt
 
@@ -118,6 +146,8 @@ var (
 	colsInfosMap = make(map[string]int)
 
 	standAloneWindow bool
+
+	filesCount int
 
 	filesIn,
 	filesOut,
@@ -152,15 +182,26 @@ type MainOpt struct {
 
 	CutSec,
 	EditAudioTrack,
+	EditAudioDelay,
 	EditTextTrack int
 
 	InfosExpandAll,
+	SemiDarkMode,
 	EditOverwrite,
-	EditShowProgress,
 	CumulativeDnD,
 	TitleTextFile bool
 
 	FilesDuration []time.Duration
+
+	// RGBA
+	MainFgCol,
+	SecondaryFgCol,
+	MainBgCol,
+	CellviewBgCol,
+	ButtonFgCol,
+	ButtonBgCol,
+	SpinBgCol,
+	ToolbarBgCol *gipfmcrr.Rgba
 }
 
 // Init: Main options initialisation, Put here default values for your application.
@@ -172,16 +213,17 @@ func (opt *MainOpt) Init() {
 	opt.InfosWinHeight = 630
 
 	opt.OutputSuffix = "_out"
-	opt.EditShowProgress = false
+	opt.SemiDarkMode = true
 
 	tvColsFiles = [][]string{
 		{"", "active"},
 		{"Name", "text"},
-		{"Format", "text"},
+		{"Fmt", "text"},
 		{"W x H", "text"},
 		{"Durat.", "text"},
 		{"Size", "text"},
 		{"Path", "text"},
+		// {"", "text"},
 	}
 	colsFilesMap = map[string]int{
 		"Toggle":   0,
@@ -191,6 +233,7 @@ func (opt *MainOpt) Init() {
 		"Duration": 4,
 		"Size":     5,
 		"Path":     6,
+		"blank":    7,
 	}
 
 	tvColsInfos = [][]string{
@@ -203,42 +246,49 @@ func (opt *MainOpt) Init() {
 		"Desc":    1,
 		"Details": 2,
 	}
+
+	opt.MainFgCol = RgbaNew(255, 255, 255, 1)
+	opt.SecondaryFgCol = RgbaNew(128, 32, 32, 0.9)
+	opt.MainBgCol = RgbaNew(64, 64, 64, 0.8)
+	opt.CellviewBgCol = RgbaNew(64, 32, 16, 0.3)
+	opt.ButtonFgCol = opt.MainFgCol
+	opt.ButtonBgCol = RgbaNew(0, 0, 0, 0)
+	opt.SpinBgCol = RgbaNew(128, 128, 128, 0.8)
+	opt.ToolbarBgCol = RgbaNew(64, 64, 64, 0)
+}
+
+func updWinPos(c int) {
+	var updt = func() {
+		obj.WindowInfos.Resize(opt.InfosWinWidth, opt.InfosWinHeight)
+		obj.WindowInfos.Move(opt.InfosWinPosX, opt.InfosWinPosY)
+
+		obj.EditWindow.Resize(opt.EditWinWidth, opt.EditWinHeight)
+		obj.EditWindow.Move(opt.EditWinPosX, opt.EditWinPosY)
+
+		obj.MainWindow.Resize(opt.MainWinWidth, opt.MainWinHeight)
+		obj.MainWindow.Move(opt.MainWinPosX, opt.MainWinPosY)
+	}
+
+	count := c
+	glib.TimeoutAdd(uint(64), func() bool {
+
+		updt()
+		count--
+		return count > 0
+	})
 }
 
 // UpdateObjects: Options -> Objects. Put here options to assign to gtk3 objects at start
 func (opt *MainOpt) UpdateObjects() {
 
-	var updWinPos = func() {
-
-		obj.MainWindow.Resize(opt.MainWinWidth, opt.MainWinHeight)
-		obj.MainWindow.Move(opt.MainWinPosX, opt.MainWinPosY)
-
-		// obj.WindowInfos.Resize(opt.InfosWinWidth, opt.InfosWinHeight)
-		// obj.WindowInfos.Move(opt.InfosWinPosX, opt.InfosWinPosY)
-
-		// obj.EditWindow.Resize(opt.EditWinWidth, opt.EditWinHeight)
-		// obj.EditWindow.Move(opt.EditWinPosX, opt.EditWinPosY)
-
-		obj.GridProgress.SetVisible(opt.EditShowProgress)
-	}
-
-	count := 5
-	glib.TimeoutAdd(uint(64), func() bool {
-
-		updWinPos()
-		count--
-		return count > 0
-	})
+	updWinPos(5)
 
 	/* Your own declarations here */
 	obj.InfosCheckExpandAll.SetActive(opt.InfosExpandAll)
 	// InfosCheckExpandAllToggled(obj.InfosCheckExpandAll)
 
-	obj.GridProgress.SetVisible(false)
 	obj.EditEntryOutputSuffix.SetText(opt.OutputSuffix)
-
-	obj.EditCutCheckOverwrite.SetActive(opt.EditOverwrite)
-	obj.EditCutCheckShowProgress.SetActive(opt.EditShowProgress)
+	obj.EditCheckOverwrite.SetActive(opt.EditOverwrite)
 
 	if opt.TitleTextFile {
 		obj.EditRadioGeneralTitleUseTxtFile.SetActive(opt.TitleTextFile)
@@ -246,14 +296,15 @@ func (opt *MainOpt) UpdateObjects() {
 		obj.EditRadioGeneralTitleUseFilename.SetActive(!opt.TitleTextFile)
 	}
 	obj.EditCheckCumulativeDnD.SetActive(opt.CumulativeDnD)
+	obj.EditCheckSemiDarkMode.SetActive(opt.SemiDarkMode)
 }
 
 // UpdateOptions: Objects -> Options. Put here the gtk3 objects whose values you want to
 // save in the options structure on exit.
 func (opt *MainOpt) UpdateOptions() {
 
-	opt.MainWinWidth, opt.MainWinHeight = obj.MainWindow.GetSize()
-	opt.MainWinPosX, opt.MainWinPosY = obj.MainWindow.GetPosition()
+	// opt.MainWinWidth, opt.MainWinHeight = obj.MainWindow.GetSize()
+	// opt.MainWinPosX, opt.MainWinPosY = obj.MainWindow.GetPosition()
 
 	// opt.InfosWinWidth, opt.InfosWinHeight = obj.WindowInfos.GetSize()
 	// opt.InfosWinPosX, opt.InfosWinPosY = obj.WindowInfos.GetPosition()
@@ -263,6 +314,7 @@ func (opt *MainOpt) UpdateOptions() {
 
 	opt.TitleTextFile = obj.EditRadioGeneralTitleUseTxtFile.GetActive()
 	opt.OutputSuffix, _ = obj.EditEntryOutputSuffix.GetText()
+	opt.SemiDarkMode = obj.EditCheckSemiDarkMode.GetActive()
 }
 
 // Read: Options from file.
