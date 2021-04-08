@@ -1,4 +1,4 @@
-# Info Media mkv Ed
+# Info Media mkv Ed 1.1
 
 *Simple mkv info viewer with some limited editing features, titling, tag cleaner, default/forced track, head/tail video trimmer, aspect/ratio changer...*
 
