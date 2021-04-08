@@ -56,7 +56,7 @@ Take a look [here, H.F.M repositories](https://github.com/hfmrow/) for other use
 
 ###### Overview
 
-![](assets/readme/overview.jpg)
+![Overview](assets/readme/overview.jpg)
 
 ## How to compile
 
