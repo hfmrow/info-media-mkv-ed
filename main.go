@@ -183,6 +183,9 @@ func mainApplication() {
 	/* statusbar */
 	sbs = StatusBarStructureNew(obj.MainStatusbar, []string{"Count:"})
 
+	/* Progressbar init */
+	pbs = ProgressGifNew(linearProgressHorzBlue, obj.BoxMain, 1)
+
 	/* Init treeviews */
 	if err = treeViewFilesSetup(); err == nil {
 		if err = treeViewInfosSetup(); err == nil {
@@ -192,8 +195,6 @@ func mainApplication() {
 				err = treeViewInfosPopulate(filesIn[0])
 				Logger.Log(err, "mainApplication/treeViewInfosPopulate")
 			} else {
-				// obj.MainWindow.Show()
-				// updWinPos(5)
 				err = treeViewFilesPopulate()
 				Logger.Log(err, "mainApplication/treeViewFilesPopulate")
 			}

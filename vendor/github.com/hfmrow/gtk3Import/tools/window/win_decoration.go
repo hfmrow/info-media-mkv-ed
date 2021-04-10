@@ -200,7 +200,7 @@ func (wds *WinDecorationStructure) TransparentBackground(foreground, background 
 					screen = wds.window.GetScreen()
 					if visual, err = screen.GetRGBAVisual(); err == nil {
 						wds.window.SetVisual(visual)
-						wds.window.Show()
+						// wds.window.Show()
 						wds.transparentInitialized = true
 					}
 				}

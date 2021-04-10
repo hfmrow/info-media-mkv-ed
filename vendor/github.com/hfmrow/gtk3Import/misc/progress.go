@@ -16,12 +16,14 @@ import (
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
+
+	gipf "github.com/hfmrow/gtk3Import/pixbuff"
 )
 
 type ProgressBarStruct struct {
-	RefreshMs    uint
-	GifImageName string
-
+	RefreshMs       uint
+	GifImageName    string
+	varPath         interface{}
 	gifImage        *gtk.Image
 	box             *gtk.Box
 	boxPosition     int
@@ -31,33 +33,46 @@ type ProgressBarStruct struct {
 	ticker          *time.Ticker
 }
 
-func ProgressBarNew(progressBar *gtk.ProgressBar, fMain, fEnd func() error) (pbs *ProgressBarStruct) {
+// ProgressBarNew: creat a new 'ProgressBarStruct'
+func ProgressBarNew(progressBar *gtk.ProgressBar) (pbs *ProgressBarStruct) {
 	pbs = new(ProgressBarStruct)
 	pbs.RefreshMs = 100
 	pbs.progressBar = progressBar
-	pbs.Init(fMain, fEnd)
 	return
 }
 
-func ProgressGifNew(gifImage *gtk.Image, box *gtk.Box, position int, fMain, fEnd func() error) (pbs *ProgressBarStruct) {
+// ProgressGifNew: create 'ProgressBarStruct' frome given informations.
+// Note: 'varPath' could be []byte, filename or *gtk.Image
+func ProgressGifNew(varPath interface{}, box *gtk.Box, position int) (pbs *ProgressBarStruct) {
 	pbs = new(ProgressBarStruct)
-	pbs.Init(fMain, fEnd)
 	pbs.box = box
 	pbs.boxPosition = position
-	pbs.gifImage = gifImage
-	pbs.box.Add(pbs.gifImage)
-	pbs.gifImage.SetHAlign(gtk.ALIGN_FILL)
-	pbs.gifImage.SetHExpand(true)
-	pbs.box.ReorderChild(pbs.gifImage, position)
-	// pbs.gifImage.Show()
+	pbs.varPath = varPath
 	return
 }
 
+// Init: structure initialization with start and end callback functions.
 func (pbs *ProgressBarStruct) Init(fMain, fEnd func() error) {
 	pbs.fMain, pbs.fEnd = fMain, fEnd
 }
 
+// StartGif: launch progressbar as gif animated image.
 func (pbs *ProgressBarStruct) StartGif() (err error) {
+
+	switch i := pbs.varPath.(type) {
+	case *gtk.Image:
+		pbs.gifImage = i
+	default:
+		pbs.gifImage, err = gipf.GetAnimationImage(i)
+		if err != nil {
+			return err
+		}
+	}
+	pbs.box.Add(pbs.gifImage)
+	pbs.box.ReorderChild(pbs.gifImage, pbs.boxPosition)
+	pbs.gifImage.SetHAlign(gtk.ALIGN_FILL)
+	pbs.gifImage.SetHExpand(true)
+
 	pbs.gifImage.Show()
 	waitGroup := new(sync.WaitGroup)
 	waitGroup.Add(1)
@@ -71,16 +86,14 @@ func (pbs *ProgressBarStruct) StartGif() (err error) {
 		return
 	}
 	glib.IdleAdd(func() {
-		pbs.removeGifFromTopBox()
+		// remove gif image from box.
+		pbs.box.Remove(pbs.gifImage)
 		err = pbs.fEnd()
 	})
 	return
 }
 
-func (pbs *ProgressBarStruct) removeGifFromTopBox() {
-	pbs.box.Remove(pbs.gifImage)
-}
-
+// StartTicker: start gtk progressbar using golang ticker function.
 func (pbs *ProgressBarStruct) StartTicker() (err error) {
 
 	pbs.ticker = time.NewTicker(time.Millisecond * time.Duration(pbs.RefreshMs))
@@ -114,6 +127,7 @@ func (pbs *ProgressBarStruct) StartTicker() (err error) {
 	return
 }
 
+// StartTimeOut: start gtk progressbar using 'glib.TimeoutAdd' command
 func (pbs *ProgressBarStruct) StartTimeOut() (err error) {
 
 	pbs.TimeOutContinue = true

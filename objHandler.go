@@ -13,7 +13,6 @@
 package main
 
 import (
-	"log"
 	"path/filepath"
 
 	"github.com/gotk3/gotk3/glib"
@@ -32,11 +31,7 @@ func SpinSecChanged(spin *gtk.SpinButton) {
  */
 func InfosCheckExpandAllToggled(chk *gtk.CheckButton) {
 	opt.InfosExpandAll = chk.GetActive()
-	if opt.InfosExpandAll {
-		obj.TreeViewInfos.ExpandAll()
-	} else {
-		obj.TreeViewInfos.CollapseAll()
-	}
+	tvsInfos.ExpandAll(!opt.InfosExpandAll)
 }
 
 func EditCheckSemiDarkModeToggled(chk *gtk.CheckButton) {
@@ -127,33 +122,27 @@ func InfosButtonShowFilesListClicked(btn *gtk.Button) {
 
 func ButtonProceedClicked(btn *gtk.Button) {
 
+	var err error
 	getFileTitle()
 
-	anim, err := GetPixBufAnimation(linearProgressHorzBlue)
-	if err != nil {
-		log.Fatalf("GetPixBufAnimation: %s\n", err.Error())
-	}
-	gifImage, err := gtk.ImageNewFromAnimation(anim)
-	if err != nil {
-		log.Fatalf("ImageNewFromAnimation: %s\n", err.Error())
-	}
-	pbs = ProgressGifNew(gifImage, obj.BoxMain, 1,
-		func() error {
-			glib.IdleAdd(func() {
-				obj.ButtonProceed.SetSensitive(false)
-				obj.BoxEdit.SetSensitive(false)
-			})
-			goEdit()
-			return nil
-		},
+	pbs.Init(func() error {
+		glib.IdleAdd(func() {
+			obj.ButtonProceed.SetSensitive(false)
+			obj.BoxEdit.SetSensitive(false)
+		})
+		goEdit()
+		return nil
+	},
 		func() error {
 			obj.ButtonProceed.SetSensitive(true)
 			obj.BoxEdit.SetSensitive(true)
 			return nil
 		})
+	Logger.Log(err, "ButtonProceedClicked/ProgressGifNew/Init")
 
 	go func() {
-		pbs.StartGif()
+		err = pbs.StartGif()
+		Logger.Log(err, "ButtonProceedClicked/StartGif")
 	}()
 }
 

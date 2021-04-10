@@ -25,7 +25,7 @@ import (
 /*
  * Files
  */
-
+// treeViewFilesSetup:
 func treeViewFilesSetup() error {
 	var err error
 
@@ -44,23 +44,10 @@ func treeViewFilesSetup() error {
 
 // changeCheckState: invert or unselect listview rows
 func changeCheckState(invert bool) {
-
-	var (
-		value interface{}
-		err   error
-	)
-	tvsFilesIn.ListStore.ForEach(func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter) bool {
-		if invert {
-			value = tvsFilesIn.GetColValue(iter, colsFilesMap["Toggle"])
-			err = tvsFilesIn.SetColValue(iter, colsFilesMap["Toggle"], !value.(bool))
-		} else {
-			err = tvsFilesIn.SetColValue(iter, colsFilesMap["Toggle"], false)
-		}
-		Logger.Log(err, "changeCheckState/SetColValue")
-		return false
-	})
+	tvsFilesIn.ChangeCheckState(colsFilesMap["Toggle"], false, invert)
 }
 
+// treeViewFilesPopulate:
 func treeViewFilesPopulate(files ...[]string) error {
 
 	filesToDisplay := filesIn
@@ -69,8 +56,8 @@ func treeViewFilesPopulate(files ...[]string) error {
 	}
 
 	if !obj.MainWindow.GetVisible() {
-		updWinPos(5)
 		obj.MainWindow.Show()
+		updWinPos(5)
 	}
 	obj.TreeViewFiles.GrabFocus()
 
@@ -158,6 +145,7 @@ func treeViewFilesPopulate(files ...[]string) error {
 	return nil
 }
 
+// fillFile:
 func fillFile(file string) {
 
 	var iTrue []interface{}
@@ -264,12 +252,13 @@ func treeViewInfosPopulate(file string) error {
 		Logger.Log(err, "treeViewInfosPopulate/MediaInfoStructNew")
 	}
 	if !obj.WindowInfos.GetVisible() {
-		updWinPos(5)
 		obj.WindowInfos.Show()
+		updWinPos(5)
 		obj.WindowInfos.SetModal(false)
 		obj.WindowInfos.SetKeepAbove(true)
 		obj.InfosButtonShowFilesList.SetVisible(!obj.MainWindow.GetVisible())
 	}
+
 	obj.TreeViewInfos.GrabFocus()
 
 	// Display all 'streams'

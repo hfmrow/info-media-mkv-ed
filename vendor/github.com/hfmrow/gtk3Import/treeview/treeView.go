@@ -581,8 +581,7 @@ func (tvs *TreeViewStructure) insertColumn(colIdx int) (colType glib.Type, err e
 
 /**********************\
 *    Iters Functions    *
-* Func that            *
-* applied to Iters      *
+* Func applied to Iters *
 ************************/
 
 // GetSelectedIters: retrieve list of selected iters,
@@ -674,7 +673,7 @@ func (tvs *TreeViewStructure) IterScrollTo(iter *gtk.TreeIter, column ...int) (e
 
 /*******************************\
 *    Cols Functions              *
-* Funct that applied to Columns *
+* Funct that applied to Columns  *
 *********************************/
 
 // GetColValue: Get value from iter of specific column as interface type.
@@ -688,7 +687,7 @@ func (tvs *TreeViewStructure) GetColValue(iter *gtk.TreeIter, col int) (value in
 		}
 	}
 	log.Fatalf("GetColValue: %s\n", err.Error())
-	return
+	return nil
 }
 
 // SetColValueWithCallback: set the value to iter for a specific column as an interface type.
@@ -727,6 +726,7 @@ func (tvs *TreeViewStructure) GetColValue(iter *gtk.TreeIter, col int) (value in
 // }
 
 // SetColValue: Set value to iter for a specific column as interface type.
+// If CallbackOnSetColValue is set, on each access, the function will be called.
 func (tvs *TreeViewStructure) SetColValue(iter *gtk.TreeIter, col int, value interface{}) (err error) {
 
 	switch tvs.StoreType.(type) {
@@ -791,7 +791,7 @@ func (tvs *TreeViewStructure) SetColValuePath(path *gtk.TreePath, col int, goVal
 
 /***************************\
 *    Rows Functions          *
-* Func that applied to rows *
+* Func that applied to rows  *
 *****************************/
 
 // CountRows: Return the number of rows in treeview.
@@ -1070,8 +1070,67 @@ func (tvs *TreeViewStructure) GetRowIface(iter *gtk.TreeIter) (outIface []interf
 
 /*******************************\
 *    Convenient Functions       *
-* Designed to make life easier *
+* Designed to make life easier  *
 ********************************/
+
+// ExpandAll: Expand or collapse all tree/liststore nodes
+func (tvs *TreeViewStructure) ExpandAll(collapse ...bool) {
+	if len(collapse) > 0 && collapse[0] {
+		tvs.TreeView.CollapseAll()
+	} else {
+		tvs.TreeView.ExpandAll()
+	}
+}
+
+// changeCheckState: invert or set 'state" to list/treeview columns.
+func (tvs *TreeViewStructure) ChangeCheckState(toggleCol int, state, invert bool) {
+
+	var (
+		gValue *glib.Value
+		value  interface{}
+		err    error
+	)
+	// tvs.StoreDetach()
+	// defer tvs.StoreAttach()
+
+	switch tvs.StoreType.(type) {
+	case *gtk.ListStore:
+		tvs.ListStore.ForEach(func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter) bool {
+			if invert {
+				if gValue, err = tvs.ListStore.GetValue(iter, toggleCol); err == nil {
+					if value, err = gValue.GoValue(); err == nil {
+						gValue.Unset()
+						err = tvs.ListStore.SetValue(iter, toggleCol, !value.(bool))
+					}
+				}
+			} else {
+				err = tvs.ListStore.SetValue(iter, toggleCol, state)
+			}
+			if err != nil {
+				log.Printf("ChangeCheckState: %v\n", err)
+			}
+			return false
+		})
+
+	case *gtk.TreeStore:
+		tvs.TreeStore.ForEach(func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter) bool {
+			if invert {
+				if gValue, err = tvs.TreeStore.GetValue(iter, toggleCol); err == nil {
+					if value, err = gValue.GoValue(); err == nil {
+						gValue.Unset()
+						err = tvs.TreeStore.SetValue(iter, toggleCol, !value.(bool))
+					}
+				}
+			} else {
+				err = tvs.TreeStore.SetValue(iter, toggleCol, state)
+			}
+			if err != nil {
+				log.Printf("ChangeCheckState: %v\n", err)
+			}
+			return false
+		})
+	}
+}
 
 // GetColumns: Retieve columns available in the current TreeView.
 func (tvs *TreeViewStructure) GetColumns() (out []*gtk.TreeViewColumn) {
@@ -1148,6 +1207,54 @@ func (tvs *TreeViewStructure) StoreToStringSlice() (out [][]string, err error) {
 		if row, err = tvs.GetRow(iter); err == nil {
 			out = append(out, row)
 		} else {
+			return true
+		}
+		return false
+	})
+	return
+}
+
+// StoreColToIfaceSl: Retrieve specified column of the entire store as []interface{}.
+func (tvs *TreeViewStructure) StoreColToIfaceSl(colIdx int) (outIface []interface{}, err error) {
+
+	var (
+		glibValue *glib.Value
+		value     interface{}
+	)
+
+	tvs.Model.ForEach(func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter) bool {
+
+		if glibValue, err = model.GetValue(iter, colIdx); err == nil {
+			if value, err = glibValue.GoValue(); err == nil {
+				glibValue.Unset()
+				outIface = append(outIface, value)
+			}
+		}
+		if err != nil {
+			return true
+		}
+		return false
+	})
+	return
+}
+
+// StoreColToStringSl: Retrieve specified column of the entire store as []string.
+func (tvs *TreeViewStructure) StoreColToStringSl(colIdx int) (out []string, err error) {
+
+	var (
+		glibValue *glib.Value
+		value     interface{}
+	)
+
+	tvs.Model.ForEach(func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter) bool {
+
+		if glibValue, err = model.GetValue(iter, colIdx); err == nil {
+			if value, err = glibValue.GoValue(); err == nil {
+				glibValue.Unset()
+				out = append(out, value.(string))
+			}
+		}
+		if err != nil {
 			return true
 		}
 		return false
@@ -1433,7 +1540,7 @@ var glibType = map[glib.Type]string{
 
 /************************\
 *    Helpers Functions    *
-* Made to simplify some  *
+* Made to simplify some   *
 * more complex functions  *
 **************************/
 
@@ -1647,7 +1754,7 @@ func (tvs *TreeViewStructure) ChildsPropagateColValue(parentIter *gtk.TreeIter, 
 
 /********************\
 *    TEST Functions   *
-* Not designed to be *
+* Not designed to be  *
 * used as it !!       *
 **********************/
 

@@ -147,6 +147,17 @@ func HumanReadableFreq(value interface{}, hideUnit ...bool) string {
 	return fmt.Sprintf("%2.2f%s", val, unit)
 }
 
+// TODO
+// humanReadableDate: Convert time.Duration to string human readable version.
+func HumanReadableDate(duration time.Duration, options ...string) string {
+
+	var (
+		out string
+	)
+
+	return out
+}
+
 // humanReadableTime: Convert time.Duration to string human readable version.
 func HumanReadableTime(duration time.Duration, unitSep ...string) string {
 

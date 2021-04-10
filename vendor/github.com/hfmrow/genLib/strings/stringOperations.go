@@ -45,6 +45,12 @@ func UnescapeToUtf8(inStr string) string {
 	return inStr
 }
 
+// UnEscapedStr: Convert raw string that contain escaped values to
+// literal string. Same result as below.
+func UnEscapedStr(in string) string {
+	return fmt.Sprint(UnescapeToUtf8(in))
+}
+
 // UnEscapeString: Convert raw string that contain escaped values to
 // literal string.
 func UnEscapeString(inString string) string {
