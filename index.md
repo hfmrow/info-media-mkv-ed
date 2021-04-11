@@ -89,6 +89,7 @@ This operation indicates that the external data (image/icons) must be integrated
 ## Os information:
 
 <details>
+  
   <summary>Built using</summary>
 
 | Name                                                       | Version / Info / Name                          |
