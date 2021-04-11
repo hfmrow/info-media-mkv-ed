@@ -2,7 +2,7 @@
 
 *Simple mkv info viewer with some limited editing features, titling, tag cleaner, default/forced track, head/tail video trimmer, aspect/ratio changer...*
 
-#### Last update 2021-04-06
+#### Last update 2021-04-11
 
 ###### Requirement: *mkvtoolnix, ffmpeg, mediainfo*
 
