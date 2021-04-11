@@ -84,7 +84,12 @@ Take a look [here, H.F.M repositories](https://github.com/hfmrow/) for other use
 
 This operation indicates that the external data (image/icons) must be integrated into the executable file and/or that the internal behavior will be modified to adapt to the production environment.
 
-### Os informations (build with)
+---
+
+## Os information:
+
+<details>
+  <summary>Built using</summary>
 
 | Name                                                       | Version / Info / Name                          |
 | ---------------------------------------------------------- | ---------------------------------------------- |
@@ -102,6 +107,8 @@ This operation indicates that the external data (image/icons) must be integrated
 | [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) | 4.6.0                                          |
 | [LiteIDE](https://github.com/visualfc/liteide)             | 37.4 qt5.x                                     |
 | Qt5                                                        | 5.12.8 in /usr/lib/x86_64-linux-gnu            |
+
+</details>
 
 - The compilation have not been tested under Windows or Mac OS.
 
